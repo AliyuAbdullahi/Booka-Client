@@ -11,12 +11,15 @@
     <item name="android:divider">#B6B6B6</item>
     <item name="android:textColorPrimary">#212121</item>
     <item name="android:textColorSecondary">#727272</item>
-    <item name="android:windowTranslucentStatus">true</item>
-    <item name="android:windowTranslucentNavigation">true</item>
   </style>
   <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
 
   </style>
+
+  <style name="Theme.MyFancyTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_48dp</item>
+  </style>
+
 
   <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
 

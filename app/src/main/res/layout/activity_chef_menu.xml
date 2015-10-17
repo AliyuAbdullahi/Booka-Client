@@ -1,35 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
+  android:orientation="vertical"
+  android:background="#ccc"
   android:layout_height="match_parent"
-  android:fitsSystemWindows="true"
-  tools:context="com.example.bookac.ChefMenu">
-
-  <android.support.design.widget.AppBarLayout
-    android:layout_height="wrap_content"
+  android:layout_width="match_parent">
+  <FrameLayout
+    android:layout_weight="1"
     android:layout_width="match_parent"
-    android:theme="@style/AppTheme.AppBarOverlay">
-
+    android:background="#f00"
+    android:orientation="vertical"
+    android:layout_height="0dp"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.bookac.ChefMenu">
+    <ImageView
+      android:src="@drawable/food"
+      android:scaleType="centerCrop"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+    <View
+      android:background="@drawable/view_background"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
     <android.support.v7.widget.Toolbar
       android:id="@+id/toolbar"
       android:layout_width="match_parent"
       android:layout_height="?attr/actionBarSize"
-      android:background="?attr/colorPrimary"
-      app:popupTheme="@style/AppTheme.PopupOverlay"/>
+      android:background="@android:color/transparent"
+      app:popupTheme="@style/AppTheme.PopupOverlay">
+    </android.support.v7.widget.Toolbar>
+    <RelativeLayout
+      android:layout_gravity="center"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
 
-  </android.support.design.widget.AppBarLayout>
+      <TextView
+        android:textSize="18sp"
+        android:textColor="#fff"
+        android:layout_marginTop="60dp"
+        android:text="Adesina Street Lagos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
-  <include layout="@layout/content_chef_menu"/>
+    <TextView
+      android:textSize="32sp"
+      android:textColor="#fff"
+      android:text="Mr Gberikon"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"/>
 
-  <android.support.design.widget.FloatingActionButton
-    android:id="@+id/fab"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom|end"
-    android:layout_margin="@dimen/fab_margin"
-    android:src="@android:drawable/ic_dialog_email"/>
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal|bottom">
+      <LinearLayout
+        android:paddingBottom="20dp"
+        android:paddingRight="40dp"
+        android:paddingLeft="40dp"
+        android:paddingTop="20dp"
+        android:id="@+id/first"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+        <ImageView
+          android:layout_gravity="center_horizontal"
+          android:src="@drawable/ic_call_white_48dp"
+          android:layout_width="25dp"
+          android:layout_height="25dp"/>
+        <TextView
+          android:layout_gravity="center_horizontal"
+          android:textColor="#fff"
+          android:text="Call"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+      </LinearLayout>
+      <LinearLayout
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingRight="40dp"
+        android:paddingLeft="40dp"
+        android:paddingTop="20dp"
+        android:id="@+id/second"
+        android:layout_toRightOf="@id/first"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content">
+        <ImageView
+          android:src="@drawable/menu"
+          android:layout_gravity="center_horizontal"
+          android:layout_width="25dp"
+          android:layout_height="25dp"/>
+        <TextView
+          android:layout_gravity="center_horizontal"
+          android:textColor="#fff"
+          android:text="Menu"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+      </LinearLayout>
+      <LinearLayout
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingRight="40dp"
+        android:paddingLeft="40dp"
+        android:paddingTop="20dp"
+        android:id="@+id/third"
+        android:layout_toRightOf="@id/second"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content">
+        <ImageView
+          android:src="@drawable/rating"
+          android:layout_gravity="center_horizontal"
+          android:layout_width="25dp"
+          android:layout_height="25dp"/>
+        <TextView
+          android:layout_gravity="center_horizontal"
+          android:textColor="#fff"
+          android:text="Rate"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+      </LinearLayout>
+    </LinearLayout>
+  </FrameLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+  <android.support.v7.widget.CardView
+    android:layout_margin="8dp"
+    android:id="@+id/cardview"
+    android:elevation="4dp"
+    android:layout_weight="1"
+    android:layout_width="match_parent"
+    android:background="#40ffffff"
+    android:layout_height="0dp"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true">
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+    <TextView
+      android:layout_marginTop="8dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:textSize="18sp"
+      android:textColor="#000"
+      android:id="@+id/address"
+      android:text="Address"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+    <TextView
+      android:id="@+id/addressdetails"
+      android:layout_margin="8dp"
+      android:textSize="15sp"
+      android:textColor="#000"
+      android:layout_below="@id/address"
+      android:text="This is the details of the address"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+      <fragment
+        android:layout_below="@id/addressdetails"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/map4"
+        tools:context="com.example.bookac.GetPeopleAround"
+        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
+    </RelativeLayout>
+
+  </android.support.v7.widget.CardView>
+</LinearLayout>
