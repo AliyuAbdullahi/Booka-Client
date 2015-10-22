@@ -93,8 +93,13 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
     enterLocation.setOnClickListener (new View.OnClickListener () {
       @Override
       public void onClick (View v) {
-        if(visible && isOnline ()){
+        if(location.getText () == null){
+          Toast.makeText (getApplicationContext (), "Search for a location", Toast.LENGTH_SHORT).show ();
+        }
+        else if(visible && isOnline () ){
           Intent go = new Intent (GetPeopleAround.this, UserHomePage.class);
+          go.putExtra ("longitude", mMap.getCameraPosition ().target.longitude);
+          go.putExtra ("latitude", mMap.getCameraPosition ().target.latitude);
           startActivity (go);
         }
       }
@@ -105,7 +110,7 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
       public boolean onTouch (View v, MotionEvent event) {
         switch (event.getAction ()){
           case MotionEvent.ACTION_DOWN:
-            if(isOnline ()){
+            if(isOnline () && location.getText ()!=null){
               Intent getAddress = new Intent (GetPeopleAround.this, AutoComplete.class);
               startActivityForResult (getAddress, REQUEST_CODE);
             }
@@ -169,9 +174,6 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
       Barcode.GeoPoint point =  getLocationFromAddress (result);
       LatLng latLng = new LatLng (point.lat/1000000,point.lng/1000000);
       showToast (point.lat / 1000000 + " " + point.lng / 1000000);
-     // CameraPosition position = new CameraPosition (latLng, 8, 0, 360);
-     // mMap.animateCamera (CameraUpdateFactory.newLatLng (latLng));
-     // mMap.animateCamera (CameraUpdateFactory.newLatLng (newLatLng));
       CameraPosition newPosition = CameraPosition.builder ().target (newLatLng)
               .zoom (15).build ();
       mMap.animateCamera (CameraUpdateFactory.newCameraPosition (newPosition), 2000, null);
@@ -245,16 +247,16 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
         if(!visible){
           cardView.setVisibility (View.VISIBLE);
           cardView.startAnimation (show);
-          enterLocation.setImageResource (R.drawable.enter_two);
+          enterLocation.setImageResource (R.drawable.getcheflocationactive);
           waitingForLocation.setVisibility (View.INVISIBLE);
-          goToLocation.setText ("Go to " + location.getText ().toString ());
+          goToLocation.setText ("Find Chefs in " + location.getText ().toString ());
           visible = true;
         }
         else {
           cardView.startAnimation (hide);
           cardView.setVisibility (View.GONE);
           goToLocation.setText ("");
-          enterLocation.setImageResource (R.drawable.enter_one);
+          enterLocation.setImageResource (R.drawable.gotocheflocation);
           waitingForLocation.setVisibility (View.VISIBLE);
           visible = false;
         }
@@ -361,14 +363,14 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
                     addresses.get(0).getAdminArea()
                     + ", " + addresses.get(0).getCountryName());
             if(visible && isOnline () && !(location.getText ().toString ().contains (WAITING_FOR_LOCATION)) ){
-              goToLocation.setText ("Go to "+addresses.get (0).getFeatureName ()+", "+addresses.get (0).getAdminArea ());
+              goToLocation.setText ("Find Chefs in "+addresses.get (0).getFeatureName ()+", "+addresses.get (0).getAdminArea ());
               waitingForLocation.setVisibility (View.INVISIBLE);
-              enterLocation.setImageResource (R.drawable.enter_two);
+              enterLocation.setImageResource (R.drawable.getcheflocationactive);
             }
             else {
               goToLocation.setText ("");
               waitingForLocation.setVisibility (View.VISIBLE);
-              enterLocation.setImageResource (R.drawable.enter_one);
+              enterLocation.setImageResource (R.drawable.gotocheflocation);
             }
           }
         }

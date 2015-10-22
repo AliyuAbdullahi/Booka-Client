@@ -15,14 +15,7 @@
  */
 package logger;
 
-/**
- * Helper class for a list (or tree) of LoggerNodes.
- *
- * <p>When this is set as the head of the list,
- * an instance of it can function as a drop-in replacement for {@link android.util.Log}.
- * Most of the methods in this class server only to map a method call in Log to its equivalent
- * in LogNode.</p>
- */
+
 public class Log {
     // Grabbing the native values from Android's native logging facilities,
     // to make for easy migration and interop.

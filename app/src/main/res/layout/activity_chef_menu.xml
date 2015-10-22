@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:fitsSystemWindows="true">
+<LinearLayout
   android:orientation="vertical"
   android:background="#ccc"
   android:layout_height="match_parent"
@@ -16,6 +20,7 @@
     android:fitsSystemWindows="true"
     tools:context="com.example.bookac.ChefMenu">
     <ImageView
+      android:id="@+id/imageBillboard"
       android:src="@drawable/food"
       android:scaleType="centerCrop"
       android:layout_width="match_parent"
@@ -37,6 +42,7 @@
       android:layout_height="wrap_content">
 
       <TextView
+        android:id="@+id/addressOfChef"
         android:textSize="18sp"
         android:textColor="#fff"
         android:layout_marginTop="60dp"
@@ -46,6 +52,7 @@
     </RelativeLayout>
 
     <TextView
+      android:id="@+id/chefNickName"
       android:textSize="32sp"
       android:textColor="#fff"
       android:text="Mr Gberikon"
@@ -69,6 +76,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content">
         <ImageView
+          android:id="@+id/callChef"
           android:layout_gravity="center_horizontal"
           android:src="@drawable/ic_call_white_48dp"
           android:layout_width="25dp"
@@ -92,6 +100,8 @@
         android:layout_weight="1"
         android:layout_height="wrap_content">
         <ImageView
+          android:scaleType="centerCrop"
+          android:id="@+id/menuForChef"
           android:src="@drawable/menu"
           android:layout_gravity="center_horizontal"
           android:layout_width="25dp"
@@ -115,6 +125,7 @@
         android:layout_weight="1"
         android:layout_height="wrap_content">
         <ImageView
+          android:id="@+id/ratingForChef"
           android:src="@drawable/rating"
           android:layout_gravity="center_horizontal"
           android:layout_width="25dp"
@@ -162,15 +173,36 @@
       android:text="This is the details of the address"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"/>
-      <fragment
+      <RelativeLayout
         android:layout_below="@id/addressdetails"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent">
+      <ImageView
+        android:scaleType="centerCrop"
         android:id="@+id/map4"
-        tools:context="com.example.bookac.GetPeopleAround"
-        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+        <ImageView
+          android:layout_centerVertical="true"
+          android:layout_centerHorizontal="true"
+          android:src="@drawable/pin"
+          android:layout_width="50dp"
+          android:layout_height="50dp"/>
+        <android.support.design.widget.FloatingActionButton
+          android:id="@+id/fab4"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="bottom|end"
+          android:src="@android:drawable/ic_menu_view"
+          android:layout_margin="8dp"
+          android:layout_alignParentBottom="true"
+          android:layout_alignParentRight="true"
+          android:layout_alignParentEnd="true"/>
+
+      </RelativeLayout>
 
     </RelativeLayout>
 
   </android.support.v7.widget.CardView>
 </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

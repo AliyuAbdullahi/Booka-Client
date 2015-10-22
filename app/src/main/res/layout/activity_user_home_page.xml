@@ -1,13 +1,14 @@
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                xmlns:map="http://schemas.android.com/apk/res-auto"
-                tools:context="com.example.bookac.activities.UserHomePage">
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  xmlns:map="http://schemas.android.com/apk/res-auto"
+  tools:context="com.example.bookac.activities.UserHomePage">
   <include layout="@layout/toolbar"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:id="@+id/toolbar"/>
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content"
+   android:id="@+id/toolbar"/>
   <FrameLayout
     android:layout_below="@id/toolbar"
     android:id="@+id/frameForMap"
@@ -23,14 +24,6 @@
       map:cameraBearing="112.5"
       map:cameraTilt="65"
       map:cameraZoom="17"/>
-
-    <ImageView
-      android:layout_margin="10dp"
-      android:layout_gravity="right|bottom"
-      android:src="@drawable/home"
-      android:id="@+id/sendMeHome"
-      android:layout_width="50dp"
-      android:layout_height="50dp"/>
 
   </FrameLayout>
   <RelativeLayout
@@ -78,12 +71,22 @@
       android:layout_width="50dp"
       android:layout_height="50dp"/>
   </RelativeLayout>
-  <ListView
+  <RelativeLayout
     android:layout_below="@id/containerforFrame"
-    android:id="@+id/listView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
+    <ListView
+      android:id="@+id/listView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+    </ListView>
+    <ProgressBar
+      android:id="@+id/progressBar"
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:layout_alignTop="@+id/listView"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="61dp"/>
 
-  </ListView>
-
+  </RelativeLayout>
 </RelativeLayout>

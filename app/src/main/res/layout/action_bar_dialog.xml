@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:theme="@style/MyToolBar">
+
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/my_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:titleTextColor="#f00"
+    android:layout_alignParentTop="true"
+    android:background="?attr/colorPrimary"
+    android:minHeight="?attr/actionBarSize"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    />
+
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:elevation="4dp"
+    android:background="#40ffffff"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_height="380dp"
+    android:layout_marginTop="58dp"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true">
+    <fragment
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:id="@+id/mapdialogOne"
+      tools:context="com.example.bookac.GetPeopleAround"
+      android:name="com.google.android.gms.maps.SupportMapFragment"/>
+  </android.support.v7.widget.CardView>
+
+</RelativeLayout>

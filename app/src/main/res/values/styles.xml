@@ -15,7 +15,10 @@
   <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
 
   </style>
+  <style name="MyToolBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <item name="android:textColorPrimary">#f00</item>
 
+  </style>
   <style name="Theme.MyFancyTheme" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_48dp</item>
   </style>

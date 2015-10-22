@@ -19,9 +19,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -68,6 +70,7 @@ public class UserLogin extends Fragment {
             StringRequest request = new StringRequest (Request.Method.POST, "http://mybukka.herokuapp.com/api/v1/bukka/auth/login", new Response.Listener<String> () {
               @Override
               public void onResponse (String response) {
+                Log.v ("", response);
                 String userImageUrl = null;
 
                 try {
@@ -78,16 +81,13 @@ public class UserLogin extends Fragment {
                   userImageUrl = imageUrlObject.getString ("profileImageURL");
                   User.imageUrl = userImageUrl;
                   User.uid = authObject.getString ("uid");
-                  JSONObject userObject = responseObject.getJSONObject ("userObj");
-                  JSONObject coordinates = userObject.getJSONObject ("userObj");
-                  User.longitude = Double.parseDouble (coordinates.getString ("lat")) ;
-                  User.longitude = Double.parseDouble (coordinates.getString ("lng")) ;
                   User.token = token;
 
                 } catch (JSONException e) {
                   e.printStackTrace ();
                 }
                 if(userImageUrl != null){
+                  Toast.makeText (getActivity (), "Image Url: "+User.imageUrl, Toast.LENGTH_SHORT).show ();
                   dialog.hide ();
                   Intent i = new Intent (getActivity (), GetPeopleAround.class);
                   startActivity (i);
@@ -121,6 +121,9 @@ public class UserLogin extends Fragment {
                 return params;
               }
             };
+            int socketTimeout = 30000;//30 seconds - change to what you want
+            RetryPolicy policy = new DefaultRetryPolicy (socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            request.setRetryPolicy(policy);
             queue.add (request);
           }else {
             Toast.makeText (getActivity (),"Enter valid email or password", Toast.LENGTH_SHORT).show ();

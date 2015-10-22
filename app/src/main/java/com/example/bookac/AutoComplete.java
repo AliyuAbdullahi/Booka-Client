@@ -1,8 +1,11 @@
 package com.example.bookac;
 
+import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bookac.Adapters.PlaceAutocompleteAdapter;
+import com.example.bookac.activities.UserHomePage;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -26,10 +30,6 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.vision.barcode.Barcode;
-
-import java.io.IOException;
-import java.util.List;
 
 import logger.Log;
 
@@ -107,14 +107,24 @@ public class AutoComplete extends AppCompatActivity implements GoogleApiClient.O
 
       Log.i ("", "LatLog " + place.getLatLng ());
       Log.i ("", "Place details received: " + place.getName ());
-      Intent returnIntent = new Intent ();
-      returnIntent.putExtra ("lng", place.getLatLng ().longitude);
-      returnIntent.putExtra ("lat", place.getLatLng ().latitude);
-      returnIntent.putExtra ("latlong", place.getLatLng ());
-      returnIntent.putExtra ("result", place.getAddress ());
-      setResult (RESULT_OK, returnIntent);
-      finish ();
-      places.release ();
+      if(isOnline ()){
+        try{
+          Intent returnIntent = new Intent ();
+          returnIntent.putExtra ("lng", place.getLatLng ().longitude);
+          returnIntent.putExtra ("lat", place.getLatLng ().latitude);
+          returnIntent.putExtra ("latlong", place.getLatLng ());
+          returnIntent.putExtra ("result", place.getAddress ());
+          setResult (RESULT_OK, returnIntent);
+          finish ();
+          places.release ();
+        }catch (Exception e){
+          e.printStackTrace ();
+        }
+      }
+      else {
+        Toast.makeText (AutoComplete.this, "Check your internet connection", Toast.LENGTH_SHORT).show ();
+      }
+
     }
   };
 
@@ -122,6 +132,16 @@ public class AutoComplete extends AppCompatActivity implements GoogleApiClient.O
   public void onConnectionFailed (ConnectionResult connectionResult) {
 
   }
+  public boolean isOnline() {
+    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService (Context.CONNECTIVITY_SERVICE);
+    NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+    if (info != null && info.isConnectedOrConnecting ()) {
+      return true;
+    } else {
+      Toast.makeText (AutoComplete.this,"Check your internet connection", Toast.LENGTH_SHORT).show ();
+      return false;
+    }
 
+  }
 
 }

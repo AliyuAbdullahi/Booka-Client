@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:paddingLeft="2dp"
+  android:paddingRight="2dp"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+<LinearLayout
   android:orientation="horizontal"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
@@ -40,18 +48,5 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"/>
     </LinearLayout>
-
-    <ImageView
-      android:layout_weight="1"
-      android:id="@+id/logoimage"
-      android:src="@drawable/pointer"
-      android:layout_width="50dp"
-      android:layout_height="50dp"
-      android:layout_margin="10dp"
-      android:layout_centerHorizontal="true"
-      android:layout_alignParentTop="true"
-      android:layout_alignParentRight="true"
-      android:layout_alignParentEnd="true"
-      android:contentDescription="myimage"/>
-
 </LinearLayout>
+</android.support.v7.widget.CardView>

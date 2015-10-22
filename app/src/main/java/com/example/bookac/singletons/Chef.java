@@ -10,6 +10,7 @@ import java.util.ArrayList;
  * Created by aliyuolalekan on 9/29/15.
  */
 public class Chef implements Serializable{
+
   public void setAddress (String address) {
     this.address = address;
   }
@@ -51,9 +52,30 @@ public class Chef implements Serializable{
   public  double latitude;
   @SerializedName ("profilePhoto")
   public  String profilePhoto;
+
+  public static void setChefs (ArrayList<Chef> chefs) {
+    Chef.chefs = chefs;
+  }
+
+  public ArrayList<MenuItem> getMenuItems () {
+    return menuItems;
+  }
+
+  public ArrayList<MenuItem> menuItems;
+
+  public void setPhoneNumber (long phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
   @SerializedName("nickName")
   public  String nickName;
 
+  public double getPhoneNumber () {
+    return phoneNumber;
+  }
+
+  @SerializedName ("phone_number")
+  public long phoneNumber;
   public String getAddress () {
     return address;
   }
