@@ -13,7 +13,8 @@ import java.util.List;
  * Created by aliyuolalekan on 9/26/15.
  */
 public class User {
-
+  public static ArrayList<Chef> myChef;
+  public static String whatever = "";
   public static  String imageUrl = null;
   public static String token = null;
   public static  double longitude = 0;
@@ -33,6 +34,7 @@ public class User {
   public static String getDB(Context context, String id, String init) {
     return context.getSharedPreferences(myPrefs, Activity.MODE_PRIVATE).getString(id, init);
   }
+
   public static void saveDouble(String id, float value, Context context){
     try {
       context.getSharedPreferences(myPrefs, Activity.MODE_PRIVATE).edit().putFloat (id, value) .apply();

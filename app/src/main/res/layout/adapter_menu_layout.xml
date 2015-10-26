@@ -13,23 +13,51 @@
     android:layout_height="0dp"
     android:layout_alignParentTop="true"
     android:layout_centerHorizontal="true">
-    <ImageView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"/>
-    <TextView
+    <RelativeLayout
+      android:layout_marginRight="8dp"
+      android:layout_marginLeft="8dp"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
-    <Button
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+      android:layout_height="wrap_content">
+      <ImageView
+        android:scaleType="centerCrop"
+        android:id="@+id/desertImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
+      <TextView
+        android:gravity="center_vertical"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:text="Desert Name"
+        android:layout_below="@id/desertImage"
+        android:id="@+id/desertName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+      <TextView
+        android:gravity="center_vertical"
+        android:text="Desert Producer"
+        android:layout_below="@id/desertName"
+        android:id="@+id/desertProducer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+      <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_below="@id/desertProducer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+          android:gravity="center_vertical"
+          android:text="price"
+          android:id="@+id/desertPrice"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+        <Button
+          android:layout_alignParentRight="true"
+          android:text="Add"
+          android:id="@+id/addTocart"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+      </RelativeLayout>
+
+    </RelativeLayout>
     </android.support.v7.widget.CardView>
   </LinearLayout>

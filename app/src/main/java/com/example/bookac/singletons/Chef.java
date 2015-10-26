@@ -53,6 +53,17 @@ public class Chef implements Serializable{
   @SerializedName ("profilePhoto")
   public  String profilePhoto;
 
+  public void setUid (String uid) {
+
+    this.uid = uid;
+  }
+
+  public String getUid () {
+
+    return uid;
+  }
+
+  public String uid;
   public static void setChefs (ArrayList<Chef> chefs) {
     Chef.chefs = chefs;
   }
@@ -61,7 +72,7 @@ public class Chef implements Serializable{
     return menuItems;
   }
 
-  public ArrayList<MenuItem> menuItems;
+  public ArrayList<MenuItem> menuItems = new ArrayList<MenuItem> ();
 
   public void setPhoneNumber (long phoneNumber) {
     this.phoneNumber = phoneNumber;

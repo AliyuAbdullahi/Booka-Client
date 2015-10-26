@@ -43,13 +43,18 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.io.InputStream;
 
+import logger.Toaster;
+
 public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
+
   TextView chefNickName;
   TextView chefAddress;
   LinearLayout first;
   LinearLayout second;
   LinearLayout third;
   String chefAddrss;
+  String uid;
+  Bundle args = new Bundle();
   ImageView imageBillBoard;
   TextView addressDetails;
   TextView chefFullAddress;
@@ -66,6 +71,7 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
   GoogleMap googleMap;
   ImageView mapImage;
   ImageView menuForChef;
+  private String chefUid;
 
   @Override
   protected void onCreate (Bundle savedInstanceState) {
@@ -78,18 +84,18 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
     final Drawable upArrow = getResources ().getDrawable (R.drawable.abc_ic_ab_back_mtrl_am_alpha);
     upArrow.setColorFilter (getResources ().getColor (android.R.color.white), PorterDuff.Mode.SRC_ATOP);
     getSupportActionBar ().setHomeAsUpIndicator (upArrow);
-    setUpView ();
     getIntentContent ();
+    setUpView ();
+
+
 
     //setup fab
+
     FloatingActionButton fab = (FloatingActionButton) findViewById (R.id.fab4);
     fab.setOnClickListener (new View.OnClickListener () {
       @Override
       public void onClick (View view) {
-        Bundle args = new Bundle();
-        args.putString ("title", chefAddrss);
-        args.putDouble ("longitude", cheflongitude);
-        args.putDouble ("latitude", chefLatitude);
+        setUpIntent (args);
         ActionBarDialog dialog = new ActionBarDialog ();
         dialog.setArguments(args);
         dialog.show (getSupportFragmentManager (),
@@ -98,14 +104,17 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
                 .setAction ("Action", null).show ();
       }
     });
+
     second.setOnClickListener (new View.OnClickListener () {
       @Override
       public void onClick (View v) {
         first.setBackgroundColor (Color.argb (5, 300, 200, 100));
-        Intent i = new Intent (ChefMenu.this, com.example.bookac.Menu.class);
-        startActivity (i);
+        Intent moveToMenuActivity = new Intent (ChefMenu.this, com.example.bookac.Menu.class);
+        moveToMenuActivity.putExtra("uid", chefUid);
+        startActivity (moveToMenuActivity);
       }
     });
+
     first.setOnClickListener (new View.OnClickListener () {
       @Override
       public void onClick (View v) {
@@ -146,15 +155,17 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
   @Override
   public boolean onOptionsItemSelected (MenuItem item) {
     switch (item.getItemId()) {
-      case android.R.id.home:
-        onBackPressed ();
       case R.id.share:
         String restaurantBodyString = "Visit us today at "+ chefAddrss+" for your meal and you will be glad you did!";
         shareIt ("Visit "+ chefNick+" Resataurant", restaurantBodyString );
+        break;
+      case android.R.id.home:
+        onBackPressed ();
         return true;
     }
     return super.onOptionsItemSelected(item);
   }
+
   public boolean isOnline() {
     ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService (Context.CONNECTIVITY_SERVICE);
     NetworkInfo info = connectivityManager.getActiveNetworkInfo();
@@ -166,6 +177,7 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
     }
 
   }
+
   public void setUpView(){
     getIntentContent ();
     first = (LinearLayout)findViewById (R.id.first);
@@ -191,8 +203,10 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
     }
 
   }
+
   public void getIntentContent(){
     Intent intent = getIntent ();
+    chefUid = intent.getStringExtra ("uid");
     chefFirstName = intent.getStringExtra ("firstname");
     chefLastName = intent.getStringExtra ("lastname");
     chefNick = intent.getStringExtra ("nickname");
@@ -206,6 +220,7 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
   public void onMapReady (GoogleMap googleMap) {
 
   }
+
   private void shareIt(String header, String shareBody) {
     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
     sharingIntent.setType("text/plain");
@@ -214,6 +229,15 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
     startActivity (Intent.createChooser (sharingIntent, "Share via"));
   }
 
+  public void setUpIntent( Bundle args){
+    args.putString ("title", chefAddrss);
+    args.putDouble ("longitude", cheflongitude);
+    args.putDouble ("latitude", chefLatitude);
+  }
+
+  public void getIntentObject(){
+
+  }
 }
 
 

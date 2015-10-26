@@ -1,16 +1,23 @@
 package com.example.bookac;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Picture;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -26,7 +33,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.bookac.activities.UserHomePage;
+import com.example.bookac.singletons.Chef;
+import com.example.bookac.singletons.User;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,9 +61,15 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.larvalabs.svgandroid.SVG;
 import com.larvalabs.svgandroid.SVGParser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import logger.Log;
 
@@ -55,6 +78,8 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
         GoogleApiClient.OnConnectionFailedListener {
   private RelativeLayout goNow;
   TextView goToLocation;
+  double latitud;
+  double longitud;
   ProgressBar waitingForLocation;
   private Location mLastLocation;
   private String WAITING_FOR_LOCATION = "Waiting for Location";
@@ -74,47 +99,49 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
   private Animation hide;
   private Animation show;
   int REQUEST_CODE = 1;
+
   @Override
   protected void onCreate (Bundle savedInstanceState) {
     super.onCreate (savedInstanceState);
     setContentView (R.layout.activity_get_people_around);
-    if (checkPlayServices()) {
+    if (checkPlayServices ()) {
 
       // Building the GoogleApi client
       buildGoogleApiClient ();
     }
 
-    final ImageView clearText = (ImageView)findViewById (R.id.cancelImage);
-    location = (TextView)findViewById (R.id.location);
-    body = (LinearLayout)findViewById (R.id.body);
-    enterLocation = (ImageView)findViewById (R.id.enter_one);
-    goToLocation = (TextView)findViewById (R.id.go_to_location);
-    goNow = (RelativeLayout)findViewById (R.id.go_now);
+    final ImageView clearText = (ImageView) findViewById (R.id.cancelImage);
+    location = (TextView) findViewById (R.id.location);
+    body = (LinearLayout) findViewById (R.id.body);
+    enterLocation = (ImageView) findViewById (R.id.enter_one);
+    goToLocation = (TextView) findViewById (R.id.go_to_location);
+    goNow = (RelativeLayout) findViewById (R.id.go_now);
     enterLocation.setOnClickListener (new View.OnClickListener () {
       @Override
       public void onClick (View v) {
-        if(location.getText () == null){
+        if (location.getText () == null) {
           Toast.makeText (getApplicationContext (), "Search for a location", Toast.LENGTH_SHORT).show ();
-        }
-        else if(visible && isOnline () ){
+        } else if (visible && isOnline ()) {
           Intent go = new Intent (GetPeopleAround.this, UserHomePage.class);
+          setUpListView upListView = new setUpListView (GetPeopleAround.this, "http://mybukka.herokuapp.com/api/v1/bukka/chefs/"
+                  + mMap.getCameraPosition ().target.latitude + "/" + mMap.getCameraPosition ().target.longitude);
+          upListView.execute ();
           go.putExtra ("longitude", mMap.getCameraPosition ().target.longitude);
           go.putExtra ("latitude", mMap.getCameraPosition ().target.latitude);
           startActivity (go);
         }
       }
     });
-    waitingForLocation = (ProgressBar)findViewById (R.id.progress);
+    waitingForLocation = (ProgressBar) findViewById (R.id.progress);
     location.setOnTouchListener (new View.OnTouchListener () {
       @Override
       public boolean onTouch (View v, MotionEvent event) {
-        switch (event.getAction ()){
+        switch (event.getAction ()) {
           case MotionEvent.ACTION_DOWN:
-            if(isOnline () && location.getText ()!=null){
+            if (isOnline () && location.getText () != null) {
               Intent getAddress = new Intent (GetPeopleAround.this, AutoComplete.class);
               startActivityForResult (getAddress, REQUEST_CODE);
-            }
-            else {
+            } else {
               Toast.makeText (getApplicationContext (), "Check your network connection",
                       Toast.LENGTH_SHORT).show ();
             }
@@ -122,7 +149,7 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
         return true;
       }
     });
-    cardView = (CardView)findViewById (R.id.cardview);
+    cardView = (CardView) findViewById (R.id.cardview);
     cardView.setVisibility (View.GONE);
     clearText.setOnClickListener (new View.OnClickListener () {
       @Override
@@ -138,25 +165,25 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
     mapFragment.getMapAsync (this);
   }
 
-  protected synchronized void buildGoogleApiClient() {
-    mGoogleApiClient = new GoogleApiClient.Builder(this)
-            .addConnectionCallbacks(this)
-            .addOnConnectionFailedListener(this)
-            .addApi(LocationServices.API).build();
+  protected synchronized void buildGoogleApiClient () {
+    mGoogleApiClient = new GoogleApiClient.Builder (this)
+            .addConnectionCallbacks (this)
+            .addOnConnectionFailedListener (this)
+            .addApi (LocationServices.API).build ();
   }
 
-  private boolean checkPlayServices() {
+  private boolean checkPlayServices () {
     int resultCode = GooglePlayServicesUtil
             .isGooglePlayServicesAvailable (this);
     if (resultCode != ConnectionResult.SUCCESS) {
-      if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-        GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-                PLAY_SERVICES_RESOLUTION_REQUEST).show();
+      if (GooglePlayServicesUtil.isUserRecoverableError (resultCode)) {
+        GooglePlayServicesUtil.getErrorDialog (resultCode, this,
+                PLAY_SERVICES_RESOLUTION_REQUEST).show ();
       } else {
-        Toast.makeText(getApplicationContext(),
+        Toast.makeText (getApplicationContext (),
                 "This device is not supported.", Toast.LENGTH_LONG)
-                .show();
-        finish();
+                .show ();
+        finish ();
       }
       return false;
     }
@@ -165,14 +192,14 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
 
   @Override
   protected void onActivityResult (int requestCode, int resultCode, Intent data) {
-    if(requestCode == REQUEST_CODE && resultCode == RESULT_OK){
+    if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
       String result = data.getStringExtra ("result");
       double latitude = data.getDoubleExtra ("lat", 0);
-      double longitude = data.getDoubleExtra ("lng",0);
+      double longitude = data.getDoubleExtra ("lng", 0);
       LatLng newLatLng = new LatLng (latitude, longitude);
       location.setText (result);
-      Barcode.GeoPoint point =  getLocationFromAddress (result);
-      LatLng latLng = new LatLng (point.lat/1000000,point.lng/1000000);
+      Barcode.GeoPoint point = getLocationFromAddress (result);
+      LatLng latLng = new LatLng (point.lat / 1000000, point.lng / 1000000);
       showToast (point.lat / 1000000 + " " + point.lng / 1000000);
       CameraPosition newPosition = CameraPosition.builder ().target (newLatLng)
               .zoom (15).build ();
@@ -197,9 +224,7 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
 
       p1 = new Barcode.GeoPoint (1, (int) (location.getLatitude () * 1E6),
               (int) (location.getLongitude () * 1E6));
-    }
-
-    catch (IOException e) {
+    } catch (IOException e) {
       e.printStackTrace ();
     }
 
@@ -220,9 +245,12 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
   public void onMapReady (GoogleMap googleMap) {
     initAnimation ();
     mMap = googleMap;
+    getMyLocation ();
     displayLocation (mMap);
     mMap.setTrafficEnabled (true);
     mMap.setMyLocationEnabled (true);
+    LatLng loc = new LatLng (latitud, longitud);
+    mMap.animateCamera (CameraUpdateFactory.newLatLngZoom (loc, 16.0f));
     // Add a marker in Sydney and move the camera
     LatLng sydney = new LatLng (-34, 151);
     mMap.setOnCameraChangeListener (new GoogleMap.OnCameraChangeListener () {
@@ -231,10 +259,9 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
       public void onCameraChange (CameraPosition cameraPosition) {
         UpdateMap map = new UpdateMap (GetPeopleAround.this, cameraPosition);
 
-        if(isOnline ()){
+        if (isOnline ()) {
           map.execute ();
-        }
-        else {
+        } else {
           Toast.makeText (getApplicationContext (), "Network not available",
                   Toast.LENGTH_SHORT).show ();
         }
@@ -244,15 +271,14 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
     mMap.setOnMapClickListener (new GoogleMap.OnMapClickListener () {
       @Override
       public void onMapClick (LatLng latLng) {
-        if(!visible){
+        if (!visible) {
           cardView.setVisibility (View.VISIBLE);
           cardView.startAnimation (show);
           enterLocation.setImageResource (R.drawable.getcheflocationactive);
           waitingForLocation.setVisibility (View.INVISIBLE);
           goToLocation.setText ("Find Chefs in " + location.getText ().toString ());
           visible = true;
-        }
-        else {
+        } else {
           cardView.startAnimation (hide);
           cardView.setVisibility (View.GONE);
           goToLocation.setText ("");
@@ -267,12 +293,12 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
 
   @Override
   public void onConnected (Bundle bundle) {
-    displayLocation(mMap);
+    displayLocation (mMap);
   }
 
   @Override
   public void onConnectionSuspended (int i) {
-    mGoogleApiClient.connect();
+    mGoogleApiClient.connect ();
   }
 
   @Override
@@ -296,24 +322,24 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
   }
 
   private GoogleMap.OnMyLocationChangeListener myLocationChangeListener
-          = new GoogleMap.OnMyLocationChangeListener() {
+          = new GoogleMap.OnMyLocationChangeListener () {
     @Override
-    public void onMyLocationChange(Location location) {
-      LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-      if(mMap != null){
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+    public void onMyLocationChange (Location location) {
+      LatLng loc = new LatLng (location.getLatitude (), location.getLongitude ());
+      if (mMap != null) {
+        mMap.animateCamera (CameraUpdateFactory.newLatLngZoom (loc, 16.0f));
       }
     }
   };
 
-  public boolean isOnline() {
+  public boolean isOnline () {
     ConnectivityManager connectivityManager = (ConnectivityManager)
             getSystemService (Context.CONNECTIVITY_SERVICE);
-    NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+    NetworkInfo info = connectivityManager.getActiveNetworkInfo ();
     if (info != null && info.isConnectedOrConnecting ()) {
       return true;
     } else {
-      Toast.makeText (getApplicationContext (),"Check your internet connection",
+      Toast.makeText (getApplicationContext (), "Check your internet connection",
               Toast.LENGTH_SHORT).show ();
       return false;
     }
@@ -322,17 +348,17 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
 
   @Override
   public void onConnectionFailed (ConnectionResult connectionResult) {
-    Log.i("ERROR_TYPE=", "Connection failed: ConnectionResult.getErrorCode() = "
-            + connectionResult.getErrorCode());
+    Log.i ("ERROR_TYPE=", "Connection failed: ConnectionResult.getErrorCode() = "
+            + connectionResult.getErrorCode ());
 
   }
 
-  public class UpdateMap extends AsyncTask<Void, Void, Void>{
+  public class UpdateMap extends AsyncTask<Void, Void, Void> {
     Context context;
     CameraPosition position;
     List<Address> addresses;
 
-    public UpdateMap(Context context, CameraPosition position){
+    public UpdateMap (Context context, CameraPosition position) {
       this.context = context;
       this.position = position;
     }
@@ -340,12 +366,11 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
     @Override
     protected Void doInBackground (Void... params) {
       try {
-        Geocoder geo = new Geocoder(GetPeopleAround.this.getApplicationContext(),
+        Geocoder geo = new Geocoder (GetPeopleAround.this.getApplicationContext (),
                 Locale.getDefault ());
-        addresses = geo.getFromLocation(position.target.latitude, position.target.longitude, 1);
-      }
-      catch (Exception e) {
-        e.printStackTrace(); // getFromLocation() may sometimes fail
+        addresses = geo.getFromLocation (position.target.latitude, position.target.longitude, 1);
+      } catch (Exception e) {
+        e.printStackTrace (); // getFromLocation() may sometimes fail
       }
       return null;
     }
@@ -353,71 +378,162 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
     @Override
     protected void onPostExecute (Void aVoid) {
       super.onPostExecute (aVoid);
-      try{
-        if (addresses.isEmpty()) {
-          location.setText(WAITING_FOR_LOCATION);
-        }
-        else {
-          if (addresses.size() > 0) {
-            location.setText(addresses.get(0).getFeatureName () + ", " +
-                    addresses.get(0).getAdminArea()
-                    + ", " + addresses.get(0).getCountryName());
-            if(visible && isOnline () && !(location.getText ().toString ().contains (WAITING_FOR_LOCATION)) ){
-              goToLocation.setText ("Find Chefs in "+addresses.get (0).getFeatureName ()+", "+addresses.get (0).getAdminArea ());
+      try {
+        if (addresses.isEmpty ()) {
+          location.setText (WAITING_FOR_LOCATION);
+        } else {
+          if (addresses.size () > 0) {
+            location.setText (addresses.get (0).getFeatureName () + ", " +
+                    addresses.get (0).getAdminArea ()
+                    + ", " + addresses.get (0).getCountryName ());
+            if (visible && isOnline () && !(location.getText ().toString ().contains (WAITING_FOR_LOCATION))) {
+              goToLocation.setText ("Find Chefs in " + addresses.get (0).getFeatureName () + ", " + addresses.get (0).getAdminArea ());
               waitingForLocation.setVisibility (View.INVISIBLE);
               enterLocation.setImageResource (R.drawable.getcheflocationactive);
-            }
-            else {
+            } else {
               goToLocation.setText ("");
               waitingForLocation.setVisibility (View.VISIBLE);
               enterLocation.setImageResource (R.drawable.gotocheflocation);
             }
           }
         }
-      }catch (Exception e){
+      } catch (Exception e) {
         e.printStackTrace ();
       }
     }
   }
-  public void initAnimation(){
+
+  public void initAnimation () {
     hide = AnimationUtils.loadAnimation (GetPeopleAround.this, R.anim.fadeout);
     show = AnimationUtils.loadAnimation (GetPeopleAround.this, R.anim.fadein);
   }
-  public void showToast(String message){
+
+  public void showToast (String message) {
     Toast.makeText (getApplicationContext (), message, Toast.LENGTH_LONG).show ();
   }
 
-  private void displayLocation(GoogleMap map) {
+  private void displayLocation (GoogleMap map) {
 
     mLastLocation = LocationServices.FusedLocationApi
-            .getLastLocation(mGoogleApiClient);
+            .getLastLocation (mGoogleApiClient);
 
     if (mLastLocation != null) {
-      double latitude = mLastLocation.getLatitude();
+      double latitude = mLastLocation.getLatitude ();
       double longitude = mLastLocation.getLongitude ();
-      LatLng loc = new LatLng(latitude, longitude);
-      if(mMap != null){
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+      LatLng loc = new LatLng (latitude, longitude);
+      if (mMap != null) {
+        mMap.animateCamera (CameraUpdateFactory.newLatLngZoom (loc, 16.0f));
       }
       //lblLocation.setText(latitude + ", " + longitude);
 
     } else {
-      Toast.makeText (getApplicationContext (),"Map getting ready...", Toast.LENGTH_SHORT).show ();
+      Toast.makeText (getApplicationContext (), "Map getting ready...", Toast.LENGTH_SHORT).show ();
     }
   }
+
   @Override
-  protected void onStart() {
-    super.onStart();
+  protected void onStart () {
+    super.onStart ();
     if (mGoogleApiClient != null) {
-      mGoogleApiClient.connect();
+      mGoogleApiClient.connect ();
     }
   }
 
   @Override
-  protected void onResume() {
-    super.onResume();
+  protected void onResume () {
+    super.onResume ();
 
-    checkPlayServices();
+    checkPlayServices ();
+  }
+
+  public class setUpListView extends AsyncTask<Void, Void, Void> {
+    Context context;
+    String url;
+
+    public setUpListView (Context context, String url) {
+      this.context = context;
+      this.url = url;
+    }
+
+    @Override
+    protected Void doInBackground (Void... params) {
+      RequestQueue que = Volley.newRequestQueue (GetPeopleAround.this);
+      final StringRequest request = new StringRequest (Request.Method.GET, url, new Response.Listener<String> () {
+        @Override
+        public void onResponse (String response) {
+          DecimalFormat decimalFormat = new DecimalFormat ("#");
+          decimalFormat.setMaximumFractionDigits (0);
+          android.util.Log.e ("", response);
+          try {
+            JSONArray chefArray = new JSONArray (response);
+            for (int i = 0; i < chefArray.length (); i++) {
+              JSONObject currentChef = chefArray.getJSONObject (i);
+              Chef chef = new Chef ();
+              chef.address = currentChef.getString ("address");
+              chef.firstname = currentChef.getString ("first_name");
+              chef.lastname = currentChef.getString ("last_name");
+              chef.nickName = currentChef.getString ("username");
+              chef.phoneNumber = Long.parseLong ((decimalFormat.format (Double.parseDouble (currentChef.getString ("phone_number")))));
+              JSONObject coord = currentChef.getJSONObject ("coords");
+              chef.longitude = Double.parseDouble (coord.getString ("lng"));
+              chef.latitude = Double.parseDouble (coord.getString ("lat"));
+              if (currentChef.getString ("profile_photo") != null) {
+                chef.profilePhoto = currentChef.getString ("profile_photo");
+              }
+//                User.myChef.add (chef);
+            }
+          } catch (JSONException e) {
+            e.printStackTrace ();
+          }
+
+        }
+      }, new Response.ErrorListener () {
+        @Override
+        public void onErrorResponse (VolleyError error) {
+          android.util.Log.e ("", error.toString ());
+        }
+      });
+      int socketTimeout = 30000;//30 seconds - change to what you want
+      RetryPolicy policy = new DefaultRetryPolicy (socketTimeout, DefaultRetryPolicy
+              .DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+      request.setRetryPolicy (policy);
+      request.setShouldCache (true);
+
+      que.add (request);
+
+
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute (Void aVoid) {
+
+      super.onPostExecute (aVoid);
+
+    }
+  }
+
+  public void getMyLocation () {
+    LocationManager locationManager = (LocationManager)
+            getSystemService (Context.LOCATION_SERVICE);
+    Criteria criteria = new Criteria ();
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (checkSelfPermission (Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission (Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        // TODO: Consider calling
+        //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
+        // here to request the missing permissions, and then overriding
+        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+        //                                          int[] grantResults)
+        // to handle the case where the user grants the permission. See the documentation
+        // for Activity#requestPermissions for more details.
+        return;
+      }
+    }
+    Location location = locationManager.getLastKnownLocation (locationManager
+            .getBestProvider (criteria, false));
+    latitud = location.getLatitude();
+    longitud = location.getLongitude ();
   }
 
 }

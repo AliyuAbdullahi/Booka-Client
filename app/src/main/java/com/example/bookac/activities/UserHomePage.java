@@ -8,7 +8,10 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -73,8 +76,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import logger.Toaster;
 
 /* By Aliyu Olalekan */
 /*
@@ -82,13 +88,16 @@ import java.util.Map;
 * the location.
 * */
 
-public class UserHomePage extends AppCompatActivity implements OnMapReadyCallback{
+public class UserHomePage extends AppCompatActivity implements OnMapReadyCallback {
 
   ArrayList<Chef> chefs = new ArrayList<Chef> ();
+  static ArrayList<Chef> myChefs;
   boolean mapReady = false;
   String address;
   int count = 0;
+  public Boolean notGotten = true;
   ImageView expand;
+  Toaster toaster = new Toaster();
   protected Location location;
   protected static double lng;
   protected static double lat;
@@ -117,11 +126,12 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate (Bundle savedInstanceState) {
     super.onCreate (savedInstanceState);
     setContentView (R.layout.activity_user_home_page);
-    toolbar = (Toolbar)findViewById (R.id.toolbar);
+
+    toolbar = (Toolbar) findViewById (R.id.toolbar);
     setSupportActionBar (toolbar);
-    listItemAvailableProgressBar = (ProgressBar)findViewById (R.id.progressBar);
+    listItemAvailableProgressBar = (ProgressBar) findViewById (R.id.progressBar);
     getUserData ();
-    chefsList = (ListView)findViewById (R.id.listView);
+    chefsList = (ListView) findViewById (R.id.listView);
     userImage = (com.pkmmte.view.CircularImageView)
             findViewById (R.id.myAvartar);
 
@@ -131,14 +141,16 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
       Picasso.with (UserHomePage.this).load (User.imageUrl)
               .error (R.drawable.logo).placeholder (R.drawable.logo)
               .into (userImage);
-    }catch (Exception e){
+    } catch (Exception e) {
       e.printStackTrace ();
     }
     //get All the chefs around
-    final FrameLayout frame = (FrameLayout)findViewById (R.id.frameForMap);
+    getCoordinates ();
+    getAllCheffsArround ("http://mybukka.herokuapp.com/api/v1/bukka/chefs/" + lat + "/" + lng);
+    final FrameLayout frame = (FrameLayout) findViewById (R.id.frameForMap);
 
 
-    expand = (ImageView)findViewById (R.id.pullMap);
+    expand = (ImageView) findViewById (R.id.pullMap);
 
     //expand the view for better access
 
@@ -147,14 +159,13 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
       public void onClick (View v) {
         ViewGroup.LayoutParams params = frame.getLayoutParams ();
 
-        if(count == 0){
+        if (count == 0) {
           expand.setImageResource (R.drawable.collapse);
           params.height = 800;
           count += 1;
-        }
-        else {
+        } else {
           expand.setImageResource (R.drawable.expand);
-          count -=1;
+          count -= 1;
           params.height = 460;
         }
 
@@ -162,17 +173,23 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
       }
     });
 
-    // the getAllCHeffsArround method is used to get all the chefs around a particular location
-    getCoordinates ();
-    getAllCheffsArround ("http://mybukka.herokuapp.com/api/v1/bukka/chefs/" + lat+ "/"+lng);
-    if(mapReady){
+     //the getAllCHeffsArround method is used to get all the chefs around a particular location
+
+    for(Chef c:readFromInternalStorage (UserHomePage.this))
+      Toast (c.address);
+    try{
+
+    }catch (Exception e){
+      e.printStackTrace ();
+    }
+    if (mapReady) {
       map.setMapType (GoogleMap.MAP_TYPE_NORMAL);
     }
     options = new PolylineOptions ().geodesic (true).add (new LatLng (User.getDouble (UserHomePage.this, "latitude", (float) 0.0), User.getDouble (UserHomePage.this, "longitude", (float) 0.0)));
-    newYorkCity = new MarkerOptions ().position (new LatLng (User.getDouble (UserHomePage.this, "latitude", (float) 0.0), User.getDouble (UserHomePage.this, "longitude", (float) 0.0)))
-            .icon (BitmapDescriptorFactory.fromResource (R.drawable.currentlocation))
-            .title (User.getString (UserHomePage.this, "address", ""));
-    mapFragment = (MapFragment)getFragmentManager ().findFragmentById (R.id.map);
+//    newYorkCity = new MarkerOptions ().position (new LatLng (User.getDouble (UserHomePage.this, "latitude", (float) 0.0), User.getDouble (UserHomePage.this, "longitude", (float) 0.0)))
+//            .icon (BitmapDescriptorFactory.fromResource (R.drawable.currentlocation))
+//            .title (User.getString (UserHomePage.this, "address", ""));
+    mapFragment = (MapFragment) getFragmentManager ().findFragmentById (R.id.map);
     mapFragment.getMapAsync (this);
 
   }
@@ -188,45 +205,61 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
 
   //getAllcheffsAround a location using Url
 
-  public void getAllCheffsArround(final String chefUrl){
+  public void getAllCheffsArround (final String chefUrl) {
     RequestQueue que = Volley.newRequestQueue (UserHomePage.this);
     final StringRequest request = new StringRequest (Request.Method.GET, chefUrl, new Response.Listener<String> () {
       @Override
       public void onResponse (String response) {
+        Log.e (" ", response);
         DecimalFormat decimalFormat = new DecimalFormat ("#");
         decimalFormat.setMaximumFractionDigits (0);
-        Log.e ("", response);
         try {
           JSONArray chefArray = new JSONArray (response);
-          for (int i = 0; i< chefArray.length (); i++){
+          for (int i = 0; i < chefArray.length (); i++) {
             JSONObject currentChef = chefArray.getJSONObject (i);
             Chef chef = new Chef ();
             chef.address = currentChef.getString ("address");
             chef.firstname = currentChef.getString ("first_name");
             chef.lastname = currentChef.getString ("last_name");
             chef.nickName = currentChef.getString ("username");
+            chef.uid = currentChef.getString ("uid");
             chef.phoneNumber = Long.parseLong ((decimalFormat.format (Double.parseDouble (currentChef.getString ("phone_number")))));
             JSONObject coord = currentChef.getJSONObject ("coords");
             chef.longitude = Double.parseDouble (coord.getString ("lng"));
             chef.latitude = Double.parseDouble (coord.getString ("lat"));
-            if(currentChef.getString ("profile_photo")!= null){
+            if (currentChef.getString ("profile_photo") != null) {
               chef.profilePhoto = currentChef.getString ("profile_photo");
             }
             chefs.add (chef);
+//            User.myChef.add (chef);
+//            User.myChef.add (chef);
+            saveToInternalStorage (UserHomePage.this, chefs);
             addresses.add (currentChef.getString ("address"));
             longitudeArrayList.add (Float.parseFloat (coord.getString ("lng")));
             latitudeArrayList.add (Float.parseFloat (coord.getString ("lat")));
+
             myAdapter adapter = new myAdapter (UserHomePage.this, chefs);
             chefsList.setAdapter (adapter);
             adapter.notifyDataSetChanged ();
-            listItemAvailableProgressBar.setVisibility (View.INVISIBLE);
+            if(chefsList.getCount () != 0){
+              listItemAvailableProgressBar.setVisibility (View.INVISIBLE);
+            }
+            else {
+              Toast.makeText (getApplicationContext (), "No Item in List", Toast.LENGTH_LONG).show ();
+            }
+              final Handler h = new Handler() {
+                @Override
+                public void handleMessage(Message message) {
+                  listItemAvailableProgressBar.setVisibility (View.INVISIBLE);
+                }
+              };
+            h.sendMessageDelayed (new Message (), 10000);
 
           }
         } catch (JSONException e) {
           e.printStackTrace ();
         }
         saveToInternalStorage (UserHomePage.this, chefs);
-
 
 
       }
@@ -238,12 +271,12 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     });
     int socketTimeout = 30000;//30 seconds - change to what you want
     RetryPolicy policy = new DefaultRetryPolicy (socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-    request.setRetryPolicy(policy);
+    request.setRetryPolicy (policy);
+    request.setShouldCache (true);
 
     que.add (request);
 
   }
-
   @Override
   public boolean onOptionsItemSelected (MenuItem item) {
     // Handle action bar item clicks here. The action bar will
@@ -266,7 +299,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     getUserData ();
     mapReady = true;
     map = googleMap;
-    map.addMarker (newYorkCity);
+//    map.addMarker (newYorkCity);
     map.setMyLocationEnabled (true);
 
     if(isResume == true) {
@@ -277,11 +310,13 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     ArrayList<Marker> markers = new ArrayList<Marker> ();
-
+    LatLngBounds.Builder builder = new LatLngBounds.Builder();
     try{
       for(Chef chef : readFromInternalStorage (UserHomePage.this)){
         double lat = chef.latitude;
         double longit = chef.longitude;
+        builder.include (new LatLng (lat, longit));
+        LatLngBounds bounds = builder.build();
         PolylineOptions rectOptions = new PolylineOptions()
                 .add (new LatLng (chef.latitude, chef.longitude));
         map.addPolyline (rectOptions);
@@ -305,6 +340,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
         toChefpage.putExtra ("lastname", chefs.get (position).lastname);
         toChefpage.putExtra ("nickname", chefs.get (position).nickName);
         toChefpage.putExtra ("address", chefs.get (position).address);
+        toChefpage.putExtra ("uid", chefs.get (position).uid);
         startActivity (toChefpage);
       }
     });
@@ -315,7 +351,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     map.moveCamera (CameraUpdateFactory.newCameraPosition (cameraPosition));
   }
 
-  private void flyTo(CameraPosition target) {
+  private void flyTo (CameraPosition target) {
     map.animateCamera (CameraUpdateFactory.newCameraPosition (target), 2000, null);
   }
 
@@ -391,6 +427,10 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
   public void saveToInternalStorage(Context ctx, ArrayList<Chef> aList) {
     try {
       clearFile ("myfile");
+      File file = new File("myfile");
+      if(file.exists())
+        file.delete ();
+
       FileOutputStream fos = ctx.openFileOutput("myfile", Context.MODE_PRIVATE);
       ObjectOutputStream of = new ObjectOutputStream(fos);
       of.writeObject(aList);

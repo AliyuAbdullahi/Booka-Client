@@ -1,17 +1,17 @@
 package com.example.bookac.singletons;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 
 /**
  * Created by aliyuolalekan on 10/22/15.
  */
 public class MenuItem {
-  String name;
-  long price;
-  String description;
-  int quantity;
-  long minutes;
-  ArrayList<String> imageUrl;
+  public   String name;
+  public long price;
+  public String description;
+  public int quantity;
+  public long minutes;
+  public ArrayList<String> imageUrl = new ArrayList<> ();
 
+  public int doneTime;
 }

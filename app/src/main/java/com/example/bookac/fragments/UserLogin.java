@@ -70,7 +70,6 @@ public class UserLogin extends Fragment {
             StringRequest request = new StringRequest (Request.Method.POST, "http://mybukka.herokuapp.com/api/v1/bukka/auth/login", new Response.Listener<String> () {
               @Override
               public void onResponse (String response) {
-                Log.v ("", response);
                 String userImageUrl = null;
 
                 try {
@@ -87,7 +86,6 @@ public class UserLogin extends Fragment {
                   e.printStackTrace ();
                 }
                 if(userImageUrl != null){
-                  Toast.makeText (getActivity (), "Image Url: "+User.imageUrl, Toast.LENGTH_SHORT).show ();
                   dialog.hide ();
                   Intent i = new Intent (getActivity (), GetPeopleAround.class);
                   startActivity (i);
