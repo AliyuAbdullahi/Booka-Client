@@ -22,6 +22,7 @@ public class User {
   public static String uid = "";
   private static String myPrefs = "trvYJ001";
   private static String myOtherpref = "yogaOne";
+  public static UserCart cart ;
 
   public static void saveDB(String id, String value, Context context) {
     try {

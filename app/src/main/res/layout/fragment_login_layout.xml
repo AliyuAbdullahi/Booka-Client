@@ -65,14 +65,9 @@
       android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
-    <TextView
-      android:textColor="#FECD85"
-      android:layout_weight="1"
-      android:text="Email"
-      android:id="@+id/emailLabel"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+
     <EditText
+      android:layout_marginBottom="10dp"
       android:inputType="textEmailAddress"
       android:singleLine="true"
       android:lines="1"
@@ -86,19 +81,10 @@
       android:paddingLeft="5dp"
       android:background="#fff"
       android:layout_weight="1"
-      android:layout_below="@id/emailLabel"
       android:id="@+id/emailTextBox"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"/>
-    <TextView
-      android:textColor="#FECD85"
-      android:layout_marginTop="20dp"
-      android:text="Password"
-      android:layout_weight="1"
-      android:layout_below="@id/emailTextBox"
-      android:id="@+id/passwordLabel"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+
     <EditText
       android:inputType="textPassword"
       android:singleLine="true"
@@ -106,19 +92,19 @@
       android:scrollHorizontally="true"
       android:textColor="#9C312B"
       android:textColorHint="#ccc"
-      android:layout_marginTop="5dp"
+      android:layout_marginTop="20dp"
       android:paddingTop="10dp"
       android:paddingBottom="10dp"
       android:paddingLeft="5dp"
       android:background="#fff"
       android:hint="Password"
-      android:layout_below="@id/passwordLabel"
       android:id="@+id/passwordTextBox"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"/>
     <Button
+      android:elevation="5dp"
       android:textColor="#fff"
-      android:layout_marginTop="20dp"
+      android:layout_marginTop="30dp"
       android:layout_gravity="center_horizontal"
       android:layout_below="@id/passwordTextBox"
       android:id="@+id/signIn"
@@ -156,7 +142,7 @@
         android:textSize="18sp"
         android:gravity="center_horizontal"
         android:layout_gravity="center_horizontal"
-        android:textColor="#FECD85"
+        android:textColor="#0097A7"
         android:text="Don't have account?"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

@@ -1,31 +1,27 @@
 package com.example.bookac.activities;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -43,11 +39,10 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.bookac.ChefMenu;
+import com.example.bookac.Adapters.SearchAutoCompleteAdapter;
 import com.example.bookac.R;
 import com.example.bookac.singletons.Chef;
 import com.example.bookac.singletons.User;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -76,7 +71,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,9 +87,12 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
   ArrayList<Chef> chefs = new ArrayList<Chef> ();
   static ArrayList<Chef> myChefs;
   boolean mapReady = false;
+  CardView searchCard;
+  SearchAutoCompleteAdapter searchAdapter;
   String address;
   int count = 0;
   public Boolean notGotten = true;
+  AutoCompleteTextView autoCompleteTextView;
   ImageView expand;
   Toaster toaster = new Toaster();
   protected Location location;
@@ -105,7 +102,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
   ListView chefsList;
   ProgressBar listItemAvailableProgressBar;
   public static final String PREFS_NAME = "ListFileOne";
-
+  TextView noChefFound;
   LocationManager locationManager;
   protected LocationRequest locationRequest;
   protected static final String TAG = "Location: ";
@@ -117,6 +114,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
   GoogleMap map;
   PolylineOptions options;
   MarkerOptions newYorkCity;
+  myAdapter adapter;
   private boolean isResume;
 
   /*
@@ -126,10 +124,12 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate (Bundle savedInstanceState) {
     super.onCreate (savedInstanceState);
     setContentView (R.layout.activity_user_home_page);
-
     toolbar = (Toolbar) findViewById (R.id.toolbar);
     setSupportActionBar (toolbar);
     listItemAvailableProgressBar = (ProgressBar) findViewById (R.id.progressBar);
+    autoCompleteTextView = (AutoCompleteTextView)findViewById (R.id.autocomplete_place_text_view);
+    searchCard = (CardView)findViewById (R.id.searchcard);
+    searchCard.setVisibility (View.INVISIBLE);
     getUserData ();
     chefsList = (ListView) findViewById (R.id.listView);
     userImage = (com.pkmmte.view.CircularImageView)
@@ -145,8 +145,8 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
       e.printStackTrace ();
     }
     //get All the chefs around
-    getCoordinates ();
-    getAllCheffsArround ("http://mybukka.herokuapp.com/api/v1/bukka/chefs/" + lat + "/" + lng);
+    noChefFound  = (TextView)findViewById (R.id.not_found);
+    noChefFound.setVisibility (View.INVISIBLE);
     final FrameLayout frame = (FrameLayout) findViewById (R.id.frameForMap);
 
 
@@ -168,15 +168,12 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
           count -= 1;
           params.height = 460;
         }
-
-
       }
     });
 
-     //the getAllCHeffsArround method is used to get all the chefs around a particular location
-
-    for(Chef c:readFromInternalStorage (UserHomePage.this))
-      Toast (c.address);
+     //the getAllCHeffsArround method is used to get all the chefs around a particular locatio
+    getCoordinates ();
+    getAllCheffsArround ("http://mybukka.herokuapp.com/api/v1/bukka/chefs/" + lat + "/" + lng);
     try{
 
     }catch (Exception e){
@@ -217,7 +214,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
           JSONArray chefArray = new JSONArray (response);
           for (int i = 0; i < chefArray.length (); i++) {
             JSONObject currentChef = chefArray.getJSONObject (i);
-            Chef chef = new Chef ();
+            final Chef chef = new Chef ();
             chef.address = currentChef.getString ("address");
             chef.firstname = currentChef.getString ("first_name");
             chef.lastname = currentChef.getString ("last_name");
@@ -231,16 +228,53 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
               chef.profilePhoto = currentChef.getString ("profile_photo");
             }
             chefs.add (chef);
+            if(chef != null){
+              searchCard.setVisibility (View.VISIBLE);
+            }
+            if(chef.address == null)
+            {
+              Toast.makeText (getApplicationContext (), "Please search for another location", Toast.LENGTH_SHORT).show ();
+              noChefFound.setVisibility (View.VISIBLE);
+              chefsList.setVisibility (View.INVISIBLE);
+              searchCard.setVisibility (View.INVISIBLE);
+            }
+
+
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            try{
+              for(Chef nchef : chefs){
+                double lat = nchef.latitude;
+                double longit = nchef.longitude;
+                builder.include (new LatLng (lat, longit));
+                LatLngBounds bounds = builder.build();
+                PolylineOptions rectOptions = new PolylineOptions()
+                        .add (new LatLng (nchef.latitude, nchef.longitude));
+                map.addPolyline (rectOptions);
+
+                map.addMarker (new MarkerOptions ().position (new LatLng (lat, longit))
+                        .title (nchef.address).draggable (true)
+                        .icon (BitmapDescriptorFactory.fromResource (R.drawable.icon_marker)));
+              }
+            }catch (Exception e){
+              e.printStackTrace ();
+            }
 //            User.myChef.add (chef);
 //            User.myChef.add (chef);
             saveToInternalStorage (UserHomePage.this, chefs);
             addresses.add (currentChef.getString ("address"));
             longitudeArrayList.add (Float.parseFloat (coord.getString ("lng")));
             latitudeArrayList.add (Float.parseFloat (coord.getString ("lat")));
-
-            myAdapter adapter = new myAdapter (UserHomePage.this, chefs);
+            adapter = new myAdapter (UserHomePage.this, chefs);
             chefsList.setAdapter (adapter);
-            adapter.notifyDataSetChanged ();
+//            if(autoCompleteTextView.getText () == null){
+//              myAdapter adapter1 = new myAdapter (UserHomePage.this, chefs);
+//              chefsList.setAdapter (adapter1);
+//              adapter1.notifyDataSetChanged ();
+//            }
+            searchAdapter = new SearchAutoCompleteAdapter (UserHomePage.this, R.layout.layout_for_autocomplete, chefs);
+            autoCompleteTextView.setAdapter (searchAdapter);
+            autoCompleteTextView.setThreshold (1);
+            autoCompleteTextView.addTextChangedListener (new MyTextWatcher (searchAdapter));
             if(chefsList.getCount () != 0){
               listItemAvailableProgressBar.setVisibility (View.INVISIBLE);
             }
@@ -299,6 +333,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     getUserData ();
     mapReady = true;
     map = googleMap;
+
 //    map.addMarker (newYorkCity);
     map.setMyLocationEnabled (true);
 
@@ -310,24 +345,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     ArrayList<Marker> markers = new ArrayList<Marker> ();
-    LatLngBounds.Builder builder = new LatLngBounds.Builder();
-    try{
-      for(Chef chef : readFromInternalStorage (UserHomePage.this)){
-        double lat = chef.latitude;
-        double longit = chef.longitude;
-        builder.include (new LatLng (lat, longit));
-        LatLngBounds bounds = builder.build();
-        PolylineOptions rectOptions = new PolylineOptions()
-                .add (new LatLng (chef.latitude, chef.longitude));
-        map.addPolyline (rectOptions);
 
-        map.addMarker (new MarkerOptions ().position (new LatLng (lat,longit))
-                .title (chef.address).draggable (true)
-                .icon (BitmapDescriptorFactory.fromResource (R.drawable.icon_marker)));
-      }
-    }catch (Exception e){
-      e.printStackTrace ();
-    }
 
     chefsList.setOnItemClickListener (new AdapterView.OnItemClickListener () {
       @Override
@@ -342,9 +360,12 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
         toChefpage.putExtra ("address", chefs.get (position).address);
         toChefpage.putExtra ("uid", chefs.get (position).uid);
         startActivity (toChefpage);
+        overridePendingTransition (R.anim.right_in, R.anim.left_out);
       }
     });
+
     getCoordinates ();
+
     LatLng position = new LatLng (lat, lng);
 
     CameraPosition cameraPosition = CameraPosition.builder ().target (position).zoom (15).build ();
@@ -402,6 +423,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
         return params;
       }
     };
+
     int socketTimeout = 30000;//30 seconds - change to what you want
     RetryPolicy policy = new DefaultRetryPolicy (socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
     request.setRetryPolicy(policy);
@@ -455,11 +477,11 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
       } catch (ClassNotFoundException e) {
         e.printStackTrace ();
       }
-      oi.close();
+      oi.close ();
     } catch (FileNotFoundException e) {
       Log.e("InternalStorage", e.getMessage());
     } catch (IOException e) {
-      Log.e("InternalStorage", e.getMessage());
+      Log.e ("InternalStorage", e.getMessage ());
     }
     return toReturn;
   }
@@ -563,4 +585,29 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
       return false;
     }
   }
+
+  public class MyTextWatcher implements TextWatcher {
+    private SearchAutoCompleteAdapter lAdapter;
+
+    public MyTextWatcher(SearchAutoCompleteAdapter lAdapter) {
+      this.lAdapter = lAdapter;
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+      lAdapter.getFilter().filter(s);
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+
+    }
+  }
+
 }

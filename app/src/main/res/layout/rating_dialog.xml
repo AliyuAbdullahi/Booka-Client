@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/my_toolbar_rating"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:background="?attr/colorPrimary"
+    android:minHeight="?attr/actionBarSize"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    />
+  <RatingBar
+    android:layout_centerHorizontal="true"
+    android:numStars="5"
+    android:stepSize="1"
+    android:layout_below="@id/my_toolbar_rating"
+    android:id="@+id/rating_bar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
+    <Button
+      android:layout_marginTop="15dp"
+      android:layout_alignParentRight="true"
+      android:textColor="#fff"
+      android:text = "Rate"
+      android:background="@drawable/bookabutton"
+      android:id="@+id/rate_chef"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/rating_bar"
+      android:layout_alignRight="@+id/rating_bar"
+      android:layout_alignEnd="@+id/rating_bar"/>
+
+</RelativeLayout>

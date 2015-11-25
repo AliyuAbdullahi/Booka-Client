@@ -1,24 +1,19 @@
-package com.example.bookac;
+package com.example.bookac.activities;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -29,21 +24,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bookac.activities.UserHomePage;
+import com.bumptech.glide.Glide;
+import com.example.bookac.R;
 import com.example.bookac.fragments.ActionBarDialog;
-import com.example.bookac.singletons.Chef;
-import com.example.bookac.singletons.User;
+import com.example.bookac.fragments.RatingDialog;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import logger.Toaster;
 
 public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -110,8 +98,17 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
       public void onClick (View v) {
         first.setBackgroundColor (Color.argb (5, 300, 200, 100));
         Intent moveToMenuActivity = new Intent (ChefMenu.this, com.example.bookac.Menu.class);
-        moveToMenuActivity.putExtra("uid", chefUid);
+        moveToMenuActivity.putExtra ("uid", chefUid);
         startActivity (moveToMenuActivity);
+        overridePendingTransition (R.anim.right_in, R.anim.left_out);
+      }
+    });
+
+    third.setOnClickListener (new View.OnClickListener () {
+      @Override
+      public void onClick (View v) {
+        RatingDialog dialog = new RatingDialog ();
+        dialog.show (getFragmentManager (), "rating_bar_frag");
       }
     });
 
@@ -132,6 +129,7 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
             return;
           }
         }
+        Toast.makeText (getApplicationContext (),"Calling " + chefNick, Toast.LENGTH_SHORT).show ();
         startActivity (callIntent);
       }
     });
@@ -161,6 +159,7 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
         break;
       case android.R.id.home:
         onBackPressed ();
+        overridePendingTransition (R.anim.left_in, R.anim.right_out);
         return true;
     }
     return super.onOptionsItemSelected(item);
@@ -188,6 +187,8 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
     chefAddress = (TextView)findViewById (R.id.addressOfChef);
     callChef = (ImageView)findViewById (R.id.callChef);
     imageBillBoard = (ImageView)findViewById (R.id.imageBillboard);
+    imageBillBoard.setImageResource (R.drawable.food);
+//    Glide.with (this).load(R.raw.mygif).asGif().into(imageBillBoard);
     addressDetails = (TextView)findViewById (R.id.addressdetails);
     chefNickName.setText (chefNick);
     chefAddress.setText (chefAddrss.split (",")[1] + " " + chefAddrss.split (",")[3]);
@@ -195,7 +196,8 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
 
     mapImage = (ImageView)findViewById (R.id.map4);
     try {
-      Picasso.with (ChefMenu.this).load ("http://maps.google.com/maps/api/staticmap?center=" +chefLatitude + "," + cheflongitude + "&zoom=17&size=600x600&sensor=true")
+      Picasso.with (ChefMenu.this).load ("http://maps.google.com/maps/api/staticmap?center="
+              +chefLatitude + "," + cheflongitude + "&zoom=17&size=600x600&sensor=true")
               .error (R.drawable.logo).placeholder (R.drawable.logo)
               .into (mapImage);
     }catch (Exception e){
@@ -237,6 +239,11 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
 
   public void getIntentObject(){
 
+  }
+
+  @Override
+  public void onBackPressed () {
+    super.onBackPressed ();
   }
 }
 

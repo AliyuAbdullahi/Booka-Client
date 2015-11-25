@@ -18,10 +18,9 @@
     android:orientation="vertical"
     android:layout_height="0dp"
     android:fitsSystemWindows="true"
-    tools:context="com.example.bookac.ChefMenu">
+    tools:context="com.example.bookac.activities.ChefMenu">
     <ImageView
       android:id="@+id/imageBillboard"
-      android:src="@drawable/food"
       android:scaleType="centerCrop"
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>

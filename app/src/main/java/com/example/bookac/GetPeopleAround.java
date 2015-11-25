@@ -2,6 +2,7 @@ package com.example.bookac;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Picture;
@@ -14,13 +15,18 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -60,6 +66,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.larvalabs.svgandroid.SVG;
 import com.larvalabs.svgandroid.SVGParser;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,7 +80,7 @@ import java.util.Set;
 
 import logger.Log;
 
-public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallback,
+public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, LocationListener,
         GoogleApiClient.OnConnectionFailedListener {
   private RelativeLayout goNow;
@@ -99,17 +106,30 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
   private Animation hide;
   private Animation show;
   int REQUEST_CODE = 1;
+  Toolbar toolbar;
+  com.pkmmte.view.CircularImageView userImage;
 
   @Override
   protected void onCreate (Bundle savedInstanceState) {
     super.onCreate (savedInstanceState);
     setContentView (R.layout.activity_get_people_around);
+    showGpsPlease ();
     if (checkPlayServices ()) {
 
       // Building the GoogleApi client
       buildGoogleApiClient ();
     }
-
+    toolbar = (Toolbar) findViewById (R.id.toolbarpeople);
+    setSupportActionBar (toolbar);
+    userImage = (com.pkmmte.view.CircularImageView)
+            findViewById (R.id.myAvartar);
+    try {
+      Picasso.with (GetPeopleAround.this).load (User.imageUrl)
+              .error (R.drawable.logo).placeholder (R.drawable.logo)
+              .into (userImage);
+    } catch (Exception e) {
+      e.printStackTrace ();
+    }
     final ImageView clearText = (ImageView) findViewById (R.id.cancelImage);
     location = (TextView) findViewById (R.id.location);
     body = (LinearLayout) findViewById (R.id.body);
@@ -193,44 +213,25 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
   @Override
   protected void onActivityResult (int requestCode, int resultCode, Intent data) {
     if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-      String result = data.getStringExtra ("result");
-      double latitude = data.getDoubleExtra ("lat", 0);
-      double longitude = data.getDoubleExtra ("lng", 0);
-      LatLng newLatLng = new LatLng (latitude, longitude);
-      location.setText (result);
-      Barcode.GeoPoint point = getLocationFromAddress (result);
-      LatLng latLng = new LatLng (point.lat / 1000000, point.lng / 1000000);
-      showToast (point.lat / 1000000 + " " + point.lng / 1000000);
-      CameraPosition newPosition = CameraPosition.builder ().target (newLatLng)
-              .zoom (15).build ();
-      mMap.animateCamera (CameraUpdateFactory.newCameraPosition (newPosition), 2000, null);
-    }
-  }
+      try {
+        String result = data.getStringExtra ("result");
+        double latitude = data.getDoubleExtra ("lat", 0);
+        double longitude = data.getDoubleExtra ("lng", 0);
+        LatLng newLatLng = new LatLng (latitude, longitude);
+        location.setText (result);
+        CameraPosition newPosition = CameraPosition.builder ().target (newLatLng)
+                .zoom (15).build ();
+        mMap.animateCamera (CameraUpdateFactory.newCameraPosition (newPosition), 2000, null);
+      } catch (NullPointerException e) {
 
-  public Barcode.GeoPoint getLocationFromAddress (String strAddress) {
-
-    Geocoder coder = new Geocoder (this);
-    List<Address> address;
-    Barcode.GeoPoint p1 = null;
-
-    try {
-      address = coder.getFromLocationName (strAddress, 5);
-      if (address == null) {
-        return null;
+        e.printStackTrace ();
+      } catch (Exception e) {
+        e.printStackTrace ();
       }
-      Address location = address.get (0);
-      location.getLatitude ();
-      location.getLongitude ();
 
-      p1 = new Barcode.GeoPoint (1, (int) (location.getLatitude () * 1E6),
-              (int) (location.getLongitude () * 1E6));
-    } catch (IOException e) {
-      e.printStackTrace ();
     }
-
-    return p1;
-
   }
+
 
   /**
    * Manipulates the map once available.
@@ -245,13 +246,11 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
   public void onMapReady (GoogleMap googleMap) {
     initAnimation ();
     mMap = googleMap;
-    getMyLocation ();
+//    getMyLocation ();
     displayLocation (mMap);
     mMap.setTrafficEnabled (true);
     mMap.setMyLocationEnabled (true);
-    LatLng loc = new LatLng (latitud, longitud);
-    mMap.animateCamera (CameraUpdateFactory.newLatLngZoom (loc, 16.0f));
-    // Add a marker in Sydney and move the camera
+    //Add a marker in Sydney and move the camera
     LatLng sydney = new LatLng (-34, 151);
     mMap.setOnCameraChangeListener (new GoogleMap.OnCameraChangeListener () {
 
@@ -277,6 +276,9 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
           enterLocation.setImageResource (R.drawable.getcheflocationactive);
           waitingForLocation.setVisibility (View.INVISIBLE);
           goToLocation.setText ("Find Chefs in " + location.getText ().toString ());
+          CameraPosition newPosition = CameraPosition.builder ().target (latLng)
+                  .zoom (15).build ();
+          mMap.animateCamera (CameraUpdateFactory.newCameraPosition (newPosition), 500, null);
           visible = true;
         } else {
           cardView.startAnimation (hide);
@@ -284,6 +286,9 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
           goToLocation.setText ("");
           enterLocation.setImageResource (R.drawable.gotocheflocation);
           waitingForLocation.setVisibility (View.VISIBLE);
+          CameraPosition newPosition = CameraPosition.builder ().target (latLng)
+                  .zoom (15).build ();
+          mMap.animateCamera (CameraUpdateFactory.newCameraPosition (newPosition), 500, null);
           visible = false;
         }
       }
@@ -303,7 +308,7 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
 
   @Override
   public void onLocationChanged (Location location) {
-
+    mMap.moveCamera (CameraUpdateFactory.newLatLng (new LatLng (6, 3)));
   }
 
   @Override
@@ -386,12 +391,12 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
             location.setText (addresses.get (0).getFeatureName () + ", " +
                     addresses.get (0).getAdminArea ()
                     + ", " + addresses.get (0).getCountryName ());
-            if (visible && isOnline () && !(location.getText ().toString ().contains (WAITING_FOR_LOCATION))) {
+            if (visible && isOnline () && !(location.getText ().toString ().equalsIgnoreCase (WAITING_FOR_LOCATION))) {
               goToLocation.setText ("Find Chefs in " + addresses.get (0).getFeatureName () + ", " + addresses.get (0).getAdminArea ());
               waitingForLocation.setVisibility (View.INVISIBLE);
               enterLocation.setImageResource (R.drawable.getcheflocationactive);
             } else {
-              goToLocation.setText ("");
+              goToLocation.setText ("Tap map to activate");
               waitingForLocation.setVisibility (View.VISIBLE);
               enterLocation.setImageResource (R.drawable.gotocheflocation);
             }
@@ -532,8 +537,58 @@ public class GetPeopleAround extends FragmentActivity implements OnMapReadyCallb
     }
     Location location = locationManager.getLastKnownLocation (locationManager
             .getBestProvider (criteria, false));
-    latitud = location.getLatitude();
+    latitud = location.getLatitude ();
     longitud = location.getLongitude ();
+  }
+
+  public void turnGPSOn () {
+    String provider = Settings.Secure.getString (getContentResolver (), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+
+    if (!provider.contains ("gps")) { //if gps is disabled
+      final Intent poke = new Intent ();
+      poke.setClassName ("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+      poke.addCategory (Intent.CATEGORY_ALTERNATIVE);
+      poke.setData (Uri.parse ("3"));
+      sendBroadcast (poke);
+    }
+  }
+
+  public boolean isGPSEnabled (Context mContext){
+    LocationManager locationManager = (LocationManager)
+            mContext.getSystemService(Context.LOCATION_SERVICE);
+    return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+  }
+
+
+  private void showGPSDisabledAlertToUser(){
+    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+    alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+            .setCancelable(false)
+            .setPositiveButton("Enable GPS in location",
+                    new DialogInterface.OnClickListener(){
+                      public void onClick(DialogInterface dialog, int id){
+                        Intent callGPSSettingIntent = new Intent(
+                                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(callGPSSettingIntent);
+                      }
+                    });
+    alertDialogBuilder.setNegativeButton("Cancel",
+            new DialogInterface.OnClickListener(){
+              public void onClick(DialogInterface dialog, int id){
+                dialog.cancel();
+              }
+            });
+    AlertDialog alert = alertDialogBuilder.create();
+    alert.show();
+  }
+  public void showGpsPlease(){
+    LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+      Toast.makeText(this, "GPS is Enabled in your devide", Toast.LENGTH_SHORT).show();
+    }else{
+      showGPSDisabledAlertToUser();
+    }
   }
 
 }

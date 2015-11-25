@@ -41,12 +41,13 @@ public class Menu extends AppCompatActivity {
   ListView listView;
   private final String CHEF_MENU_URL = "http://mybukka.herokuapp.com/api/v1/bukka/chef/menu/";
   String uid;
+
   @Override
   protected void onCreate (Bundle savedInstanceState) {
     super.onCreate (savedInstanceState);
     setContentView (R.layout.activity_menu);
     getIntentFromChefMenuActiviyt ();
-    Toolbar toolbar = (Toolbar) findViewById (R.id.toolbar);
+    Toolbar toolbar = (Toolbar) findViewById (R.id.toolbarmx);
     setSupportActionBar (toolbar);
     getSupportActionBar ().setTitle ("");
 
@@ -58,10 +59,32 @@ public class Menu extends AppCompatActivity {
     upArrow.setColorFilter (getResources ().getColor (android.R.color.white), PorterDuff.Mode.SRC_ATOP);
     getSupportActionBar ().setHomeAsUpIndicator (upArrow);
     listView = (ListView)findViewById (R.id.menu_items);
-
   }
 
+  @Override
+  public boolean onCreateOptionsMenu(android.view.Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater ().inflate (R.menu.user_menu, menu);
+    return true;
+  }
 
+  @Override
+  public boolean onOptionsItemSelected (android.view.MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.share2:
+      case R.id.share:
+        String restaurantBodyString = "Hello, I am using this awesome bukka application to find all " +
+                "the Chefs around me, am never hungry again";
+        shareIt ("Book Your meal With Bukka", restaurantBodyString );
+        break;
+      case android.R.id.home:
+        onBackPressed ();
+        overridePendingTransition (R.anim.left_in, R.anim.right_out);
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
+
+  }
 
   public void getIntentFromChefMenuActiviyt(){
     Intent getIntent = getIntent ();
@@ -100,7 +123,6 @@ public class Menu extends AppCompatActivity {
         } catch (JSONException e) {
           e.printStackTrace ();
         }
-        Toast.makeText (getApplicationContext (), response, Toast.LENGTH_SHORT).show ();
       }
     }, new Response.ErrorListener () {
       @Override
@@ -172,5 +194,18 @@ public class Menu extends AppCompatActivity {
       }
       return row;
     }
+  }
+  private void shareIt(String header, String shareBody) {
+    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+    sharingIntent.setType("text/plain");
+    sharingIntent.putExtra (android.content.Intent.EXTRA_SUBJECT, header);
+    sharingIntent.putExtra (android.content.Intent.EXTRA_TEXT, shareBody);
+    startActivity (Intent.createChooser (sharingIntent, "Share via"));
+  }
+
+  @Override
+  public void onBackPressed () {
+    overridePendingTransition(R.anim.left_in, R.anim.right_out);
+    super.onBackPressed ();
   }
 }

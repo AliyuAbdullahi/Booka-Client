@@ -1,5 +1,6 @@
 package com.example.bookac.fragments;
 
+import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -53,7 +58,17 @@ public class UserLogin extends Fragment {
     View view = inflater.inflate (R.layout.fragment_login_layout, container, false);
     email = (EditText)view.findViewById (R.id.emailTextBox);
     password = (EditText)view.findViewById (R.id.passwordTextBox);
+
+    Animation anim2 = AnimationUtils.loadAnimation (getActivity (), R.anim.x_left);
+    email.startAnimation(anim2);
+
+    Animation anim3 = AnimationUtils.loadAnimation (getActivity (), R.anim.x_right);
+    password.startAnimation(anim3);
+
     logIn = (Button)view.findViewById (R.id.signIn);
+    Animation anim = AnimationUtils.loadAnimation (getActivity (), R.anim.translator);
+    logIn.startAnimation(anim);
+
     logIn.setOnClickListener (new View.OnClickListener () {
       @Override
       public void onClick (View v) {
@@ -89,6 +104,7 @@ public class UserLogin extends Fragment {
                   dialog.hide ();
                   Intent i = new Intent (getActivity (), GetPeopleAround.class);
                   startActivity (i);
+                  getActivity ().overridePendingTransition (R.anim.right_in, R.anim.left_out);
                 }else{
                   dialog.hide ();
                   Toast.makeText (getActivity (),"Invalid User Input",Toast.LENGTH_SHORT).show ();

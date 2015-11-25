@@ -46,7 +46,7 @@ public class ActionBarDialog extends DialogFragment {
     View v = inflater.inflate(R.layout.action_bar_dialog, container, false);
     Toolbar toolbar = (Toolbar) v.findViewById(R.id.my_toolbar);
     toolbar.setTitle (title);
-    toolbar.setBackgroundColor (Color.BLUE);
+    toolbar.setBackgroundColor (Color.rgb (156,49,43));
     mapFragment = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.mapdialogOne))
             .getMap();
     // Move the camera instantly to hamburg with a zoom of 15.

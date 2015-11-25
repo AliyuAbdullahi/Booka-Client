@@ -3,8 +3,13 @@
   xmlns:map="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
+  <include layout="@layout/toolbar"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/toolbarpeople"/>
 
   <fragment
+    android:layout_below="@id/toolbarpeople"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/map"
@@ -15,17 +20,18 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:id="@+id/cardview"
-    android:elevation="4dp"
-    android:background="#40ffffff"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
+    android:elevation="8dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    android:background="#80ffffff"
     android:layout_height="60dp"
-    android:layout_marginTop="58dp"
-    android:layout_alignParentTop="true"
-    android:layout_centerHorizontal="true">
+    android:layout_alignTop="@+id/map"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_marginTop="60dp">
     <LinearLayout
       android:layout_gravity="center_vertical"
-      android:orientation="horizontal"
+      android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
       <LinearLayout
@@ -38,7 +44,7 @@
           android:id="@+id/location"
           android:layout_marginLeft="8dp"
           android:layout_gravity="center_vertical"
-          android:background="#40ffffff"
+          android:background="#80ffffff"
           android:layout_weight="9"
           android:textColorHint="#ccc"
           android:hint="Location..."
@@ -60,19 +66,22 @@
     android:layout_height="wrap_content"
     android:layout_centerInParent="true">
     <ImageView
-      android:layout_marginBottom="70dp"
       android:id="@+id/enter_one"
       android:src="@drawable/gotocheflocation"
       android:layout_width="240dp"
       android:layout_height="80dp"
-      android:contentDescription="myprogress"/>
+      android:contentDescription="myprogress"
+      android:layout_alignParentTop="true"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"/>
     <ProgressBar
-      android:layout_marginLeft="3dp"
-      android:layout_marginTop="20dp"
-      android:layout_marginRight="2dp"
       android:id="@+id/progress"
-      android:layout_width="35dp"
-      android:layout_height="35dp"/>
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:paddingBottom="15dp"
+      android:layout_centerVertical="true"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"/>
     <TextView
       android:singleLine="true"
       android:id="@+id/go_to_location"
@@ -84,20 +93,29 @@
       android:textSize="12sp"
       android:layout_marginRight="2dp"
       android:scrollHorizontally="true"
-      android:text="Go to location"
+      android:text="Tap map to activate"
       android:layout_width="150dp"
       android:layout_height="wrap_content"/>
 
     <ImageView
+      android:paddingTop="10dp"
       android:paddingBottom="16dp"
       android:paddingLeft="20dp"
-      android:layout_centerInParent="true"
       android:src="@drawable/pin"
       android:id="@+id/imageCenteInMap"
       android:layout_width="50dp"
       android:layout_height="50dp"
-      android:layout_gravity="center"/>
+      android:layout_gravity="center"
+      android:layout_below="@+id/go_to_location"
+      android:layout_centerHorizontal="true"/>
   </RelativeLayout>
-
+  <fragment
+    android:id = "@+id/navigation_fragment"
+    android:layout_gravity = "start"
+    android:layout_width = "280dp"
+    android:layout_height = "match_parent"
+    android:name="com.example.bookac.fragments.NavigationFragment"
+    tools:layout="@layout/fragment_navigation_drawer"
+    />
 </RelativeLayout>
 

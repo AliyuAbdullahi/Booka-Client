@@ -12,9 +12,16 @@
   app:layout_behavior="@string/appbar_scrolling_view_behavior"
   tools:showIn="@layout/activity_cart"
   tools:context="com.example.bookac.Cart">
-<android.support.v7.widget.RecyclerView
-  android:id="@+id/recyclerView"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"/>
+  <GridView
+    android:id="@+id/grid_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:numColumns="auto_fit"
+    android:columnWidth="90dp"
+    android:horizontalSpacing="10dp"
+    android:verticalSpacing="10dp"
+    android:gravity="center"
+    android:stretchMode="columnWidth" >
+  </GridView>
 
 </RelativeLayout>
