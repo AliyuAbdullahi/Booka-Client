@@ -71,7 +71,6 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
     Toolbar toolbar = (Toolbar) findViewById (R.id.toolbar);
     setSupportActionBar (toolbar);
 
-
     getSupportActionBar ().setTitle ("");
     getSupportActionBar ().setDisplayHomeAsUpEnabled (true);
     final Drawable upArrow = getResources ().getDrawable (R.drawable.abc_ic_ab_back_mtrl_am_alpha);
@@ -79,8 +78,6 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
     getSupportActionBar ().setHomeAsUpIndicator (upArrow);
     getIntentContent ();
     setUpView ();
-
-
 
     //setup fab
 
@@ -157,8 +154,6 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
     }
     return result;
   }
-
-
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {

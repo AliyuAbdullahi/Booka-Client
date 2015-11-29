@@ -60,6 +60,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -343,9 +344,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     int id = item.getItemId ();
 
     //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings) {
-      return true;
-    }
+
 
     return super.onOptionsItemSelected (item);
   }

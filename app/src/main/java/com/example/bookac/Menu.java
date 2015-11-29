@@ -35,6 +35,7 @@ import com.example.bookac.singletons.ItemCart;
 import com.example.bookac.singletons.MenuItem;
 import com.example.bookac.singletons.User;
 import com.example.bookac.singletons.UserCart;
+import com.example.bookac.tools.PicassoImageLoader;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -59,6 +60,7 @@ public class Menu extends AppCompatActivity {
     getIntentFromChefMenuActiviyt ();
     Toolbar toolbar = (Toolbar) findViewById (R.id.toolbarmx);
     setSupportActionBar (toolbar);
+
     mdrawerLayout = (DrawerLayout)findViewById (R.id.menudrawer);
 
     navigationFragment = (NavigationFragment)getSupportFragmentManager ().findFragmentById (R.id.navigation_fragment);
@@ -72,9 +74,11 @@ public class Menu extends AppCompatActivity {
 
     Toast.makeText (getApplicationContext (), "Uid: " + uid, Toast.LENGTH_SHORT).show ();
     getSupportActionBar ().setDisplayHomeAsUpEnabled (true);
+
     final Drawable upArrow = getResources ().getDrawable (R.drawable.abc_ic_ab_back_mtrl_am_alpha);
     upArrow.setColorFilter (getResources ().getColor (android.R.color.white), PorterDuff.Mode.SRC_ATOP);
     getSupportActionBar ().setHomeAsUpIndicator (upArrow);
+
     listView = (ListView)findViewById (R.id.menu_items);
   }
 
@@ -209,7 +213,11 @@ public class Menu extends AppCompatActivity {
         public void onClick (View v) {
           ItemCart.INSTANCE.addToItem (menuItem);
           if(ItemCart.INSTANCE.getSize () > 0){
-            Toast.makeText (getApplicationContext (), "Item Added to cart", Toast.LENGTH_SHORT).show ();
+            ItemCart.INSTANCE.itemIsinCart = true;
+            if(ItemCart.INSTANCE.getSize () == 1){
+              Toast.makeText (getApplicationContext (), ItemCart.INSTANCE.getAllItems ().size () +  " Item Added to cart", Toast.LENGTH_SHORT).show ();
+            }
+            Toast.makeText (getApplicationContext (), ItemCart.INSTANCE.getAllItems ().size () +  " Items Added to cart", Toast.LENGTH_SHORT).show ();
           }
         }
       });
@@ -223,13 +231,9 @@ public class Menu extends AppCompatActivity {
       }catch (NullPointerException e){
         e.printStackTrace ();
       }
-      try {
-        Picasso.with (Menu.this).load (menuItem.imageUrl.get (position))
-                .error (R.drawable.logo).placeholder (R.drawable.logo)
-                .into (desertImage);
-      } catch (Exception e) {
-        e.printStackTrace ();
-      }
+
+      PicassoImageLoader loader = new PicassoImageLoader (Menu.this);
+      loader.loadImage (desertImage, menuItem.imageUrl.get (position));
       return row;
     }
   }

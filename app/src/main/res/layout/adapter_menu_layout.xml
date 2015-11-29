@@ -54,10 +54,11 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>
         <Button
+          android:layout_below="@id/desertPrice"
           android:layout_marginRight="16dp"
           android:layout_marginLeft="8dp"
           android:layout_alignParentRight="true"
-          android:text="Add"
+          android:text="Add to cart"
           android:id="@+id/addTocart"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>

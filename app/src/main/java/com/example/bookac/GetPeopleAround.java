@@ -302,16 +302,14 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
           goToLocation.setText ("Find Chefs in " + location.getText ().toString ());
           CameraPosition newPosition = CameraPosition.builder ().target (latLng)
                   .zoom (15).build ();
-          mMap.animateCamera (CameraUpdateFactory.newCameraPosition (newPosition), 500, null);
           visible = true;
         } else {
           cardView.startAnimation (hide);
           cardView.setVisibility (View.GONE);
-          goToLocation.setText ("In " + location.getText ().toString ());
+          goToLocation.setText (" --- ---");
           enterLocation.setImageResource (R.drawable.gotocheflocation);
           CameraPosition newPosition = CameraPosition.builder ().target (latLng)
                   .zoom (15).build ();
-          mMap.animateCamera (CameraUpdateFactory.newCameraPosition (newPosition), 500, null);
           visible = false;
         }
       }

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 public enum ItemCart {
   INSTANCE;
 
+  public boolean itemIsinCart = false;
+
   public ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
 
   public void addToItem(MenuItem item){
@@ -24,6 +26,11 @@ public enum ItemCart {
 
   public int getSize(){
     return items.size ();
+  }
+
+  public boolean deleteAll(){
+    items.clear ();
+    return items.size () <= 0;
   }
 
 }

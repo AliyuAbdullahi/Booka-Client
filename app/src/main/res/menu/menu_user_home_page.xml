@@ -2,13 +2,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.example.bookac.activities.UserHomePage">
-  <item android:id="@+id/action_settings"
-        android:title="Sort by:"
-        app:showAsAction="never"/>
       <item
-            android:id="@+id/nearby"
-            android:title=">Nearby"/>
-      <item
-            android:title=">Cuisine"
+            android:title="Logout"
             android:id="@+id/cuisine"/>
 </menu>
