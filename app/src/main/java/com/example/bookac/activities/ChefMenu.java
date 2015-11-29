@@ -14,11 +14,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.bookac.R;
 import com.example.bookac.fragments.ActionBarDialog;
+import com.example.bookac.fragments.NavigationFragment;
 import com.example.bookac.fragments.RatingDialog;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -60,13 +63,15 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
   ImageView mapImage;
   ImageView menuForChef;
   private String chefUid;
-
+  DrawerLayout layout;
   @Override
   protected void onCreate (Bundle savedInstanceState) {
     super.onCreate (savedInstanceState);
     setContentView (R.layout.activity_chef_menu);
     Toolbar toolbar = (Toolbar) findViewById (R.id.toolbar);
     setSupportActionBar (toolbar);
+
+
     getSupportActionBar ().setTitle ("");
     getSupportActionBar ().setDisplayHomeAsUpEnabled (true);
     final Drawable upArrow = getResources ().getDrawable (R.drawable.abc_ic_ab_back_mtrl_am_alpha);
@@ -142,6 +147,18 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
     getIntentContent ();
     setUpView ();
   }
+
+  //cleanup toolbar
+  public int getStatusBarHeight() {
+    int result = 0;
+    int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+    if (resourceId > 0) {
+      result = getResources().getDimensionPixelSize(resourceId);
+    }
+    return result;
+  }
+
+
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {

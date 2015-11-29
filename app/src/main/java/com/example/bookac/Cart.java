@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bookac.activities.UserHomePage;
 import com.example.bookac.singletons.Chef;
+import com.example.bookac.singletons.ItemCart;
 import com.example.bookac.singletons.MenuItem;
 import com.example.bookac.singletons.UserCart;
 import com.squareup.picasso.Picasso;
@@ -29,33 +31,33 @@ public class Cart extends AppCompatActivity {
     Toolbar toolbar = (Toolbar) findViewById (R.id.toolbar);
     setSupportActionBar (toolbar);
     gridView = (GridView)findViewById (R.id.grid_view);
-
+    myGridAdapter adapter = new myGridAdapter (getApplicationContext ());
+    gridView.setAdapter (adapter);
     FloatingActionButton fab = (FloatingActionButton) findViewById (R.id.fab);
     fab.setOnClickListener (new View.OnClickListener () {
       @Override
       public void onClick (View view) {
-        Snackbar.make (view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction ("Action", null).show ();
+
       }
     });
   }
 
 
   public class myGridAdapter extends BaseAdapter{
-    UserCart items;
+
     Context context;
-    public myGridAdapter(Context context, UserCart items){
+    public myGridAdapter(Context context){
       this.context = context;
-      this.items = items;
+
     }
     @Override
     public int getCount () {
-      return items.itemsToCart.size ();
+      return ItemCart.INSTANCE.getSize ();
     }
 
     @Override
     public Object getItem (int position) {
-      return items.itemsToCart.get (position);
+      return ItemCart.INSTANCE.getAllItems ().get (position);
     }
 
     @Override
@@ -65,7 +67,7 @@ public class Cart extends AppCompatActivity {
 
     public View getView (int position, View convertView, ViewGroup parent) {
       View row = null;
-      MenuItem item = items.itemsToCart.get (position);
+      MenuItem item = ItemCart.INSTANCE.getAllItems ().get (position);
 
       if (convertView == null) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
@@ -73,11 +75,18 @@ public class Cart extends AppCompatActivity {
       } else {
         row = convertView;
       }
-      com.pkmmte.view.CircularImageView image = (com.pkmmte.view.CircularImageView)row
-              .findViewById (R.id.avatar);
-      TextView chefname = (TextView)row.findViewById (R.id.chefname);
-      TextView chefaddress = (TextView)row.findViewById (R.id.chefaddress);
-      TextView chefdistance = (TextView)row.findViewById (R.id.chefdistance);
+      ImageView mealImage= (ImageView)row.findViewById (R.id.imagegrid);
+      TextView mealTitle  = (TextView)row.findViewById (R.id.titleofmeal);
+      TextView mealprice = (TextView)row.findViewById (R.id.mealprice);
+      mealprice.setText ("$" + item.price + "");
+      mealTitle.setText (item.name);
+      try {
+        Picasso.with (Cart.this).load (item.imageUrl.get (position))
+                .error (R.drawable.logo).placeholder (R.drawable.logo)
+                .into (mealImage);
+      } catch (Exception e) {
+        e.printStackTrace ();
+      }
       return row;
     }
   }

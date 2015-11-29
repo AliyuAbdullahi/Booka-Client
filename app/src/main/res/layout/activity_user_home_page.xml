@@ -1,131 +1,145 @@
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+                                        android:id="@+id/drawerLayoutuserhomepage"
   xmlns:map="http://schemas.android.com/apk/res-auto"
   tools:context="com.example.bookac.activities.UserHomePage">
-  <include layout="@layout/toolbar"
-   android:layout_width="match_parent"
-   android:layout_height="wrap_content"
-   android:id="@+id/toolbar"/>
-  <FrameLayout
-    android:layout_below="@id/toolbar"
-    android:id="@+id/frameForMap"
-    android:layout_width="match_parent"
-    android:layout_height="220dp">
-
-    <fragment
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/map"
-      android:name="com.google.android.gms.maps.MapFragment"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      map:cameraBearing="112.5"
-      map:cameraTilt="65"
-      map:cameraZoom="17"/>
-    <android.support.v7.widget.CardView
-      android:layout_marginLeft="8dp"
-      android:layout_marginRight="120dp"
-      android:layout_marginTop="8dp"
-      xmlns:card_view="http://schemas.android.com/apk/res-auto"
-      android:layout_width="match_parent"
-      android:id="@+id/searchcard"
-      android:elevation="4dp"
-      android:background="#40ffffff"
-      android:layout_height="60dp"
-      android:layout_alignParentTop="true"
-      android:layout_centerHorizontal="true">
-      <LinearLayout
-        android:layout_gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-      <ImageView
-        android:layout_weight="1"
-        android:layout_marginLeft="4dp"
-        android:layout_gravity="center_vertical"
-        android:src="@android:drawable/ic_menu_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <AutoCompleteTextView
-      android:hint="Enter search item ..."
-      android:background="#00ffffff"
-      android:layout_weight="25"
-      android:id="@+id/autocomplete_place_text_view"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"/>
-      </LinearLayout>
-    </android.support.v7.widget.CardView>
-  </FrameLayout>
   <RelativeLayout
-    android:id="@+id/containerforFrame"
-    android:layout_below="@id/frameForMap"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:background="#A4443B"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <ImageView
-      android:layout_marginLeft="16dp"
-      android:id="@+id/chef"
-      android:src="@drawable/chef"
-      android:layout_width="50dp"
-      android:layout_height="50dp"/>
-    <LinearLayout
-      android:layout_centerVertical="true"
-      android:orientation="vertical"
-      android:layout_toRightOf="@id/chef"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content">
-      <TextView
-        android:textColor="#fff"
-        android:id="@+id/chefTitle"
-        android:layout_marginLeft="8dp"
-        android:text="Chefs"
-        android:layout_toRightOf="@id/chef"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-      <TextView
-        android:textColor="#fff"
-        android:layout_toRightOf="@id/chef"
-        android:layout_marginLeft="8dp"
-        android:layout_below="@id/chefTitle"
-        android:text="(Near by)"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <ImageView
-      android:id="@+id/pullMap"
-      android:layout_marginRight="16dp"
-      android:src="@drawable/expand"
-      android:layout_alignParentRight="true"
-      android:layout_width="50dp"
-      android:layout_height="50dp"/>
-  </RelativeLayout>
-  <RelativeLayout
-    android:layout_below="@id/containerforFrame"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ListView
-      android:id="@+id/listView"
+    <include layout="@layout/toolbar"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:id="@+id/toolbar"/>
+    <FrameLayout
+      android:layout_below="@id/toolbar"
+      android:id="@+id/frameForMap"
+      android:layout_width="match_parent"
+      android:layout_height="220dp">
+
+      <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        map:cameraBearing="112.5"
+        map:cameraTilt="65"
+        map:cameraZoom="17"/>
+      <android.support.v7.widget.CardView
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="120dp"
+        android:layout_marginTop="8dp"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:id="@+id/searchcard"
+        android:elevation="4dp"
+        android:background="#40ffffff"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+        <LinearLayout
+          android:layout_gravity="center_vertical"
+          android:orientation="horizontal"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+        <ImageView
+          android:layout_weight="1"
+          android:layout_marginLeft="4dp"
+          android:layout_gravity="center_vertical"
+          android:src="@android:drawable/ic_menu_search"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+      <AutoCompleteTextView
+        android:hint="Enter search item ..."
+        android:background="#00ffffff"
+        android:layout_weight="25"
+        android:id="@+id/autocomplete_place_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+        </LinearLayout>
+      </android.support.v7.widget.CardView>
+    </FrameLayout>
+    <RelativeLayout
+      android:id="@+id/containerforFrame"
+      android:layout_below="@id/frameForMap"
+      android:paddingTop="10dp"
+      android:paddingBottom="10dp"
+      android:background="#A4443B"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
-    </ListView>
-    <ProgressBar
-      android:id="@+id/progressBar"
-      android:layout_width="80dp"
-      android:layout_height="80dp"
-      android:layout_alignTop="@+id/listView"
-      android:layout_centerHorizontal="true"
-      android:layout_marginTop="61dp"/>
-    <TextView
-      android:id="@+id/not_found"
-      android:textSize="32sp"
-      android:gravity="center"
-      android:text="No Chef Found"
+      <ImageView
+        android:layout_marginLeft="16dp"
+        android:id="@+id/chef"
+        android:src="@drawable/chef"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
+      <LinearLayout
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/chef"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+          android:textColor="#fff"
+          android:id="@+id/chefTitle"
+          android:layout_marginLeft="8dp"
+          android:text="Chefs"
+          android:layout_toRightOf="@id/chef"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+        <TextView
+          android:textColor="#fff"
+          android:layout_toRightOf="@id/chef"
+          android:layout_marginLeft="8dp"
+          android:layout_below="@id/chefTitle"
+          android:text="(Near by)"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+      </LinearLayout>
+      <ImageView
+        android:id="@+id/pullMap"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/expand"
+        android:layout_alignParentRight="true"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
+    </RelativeLayout>
+    <RelativeLayout
+      android:layout_below="@id/containerforFrame"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"/>
+      android:layout_height="match_parent">
+      <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+      </ListView>
+      <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignTop="@+id/listView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="61dp"/>
+      <TextView
+        android:id="@+id/not_found"
+        android:textSize="32sp"
+        android:gravity="center"
+        android:text="No Chef Found"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
+    </RelativeLayout>
   </RelativeLayout>
-</RelativeLayout>
+  <fragment
+    android:clickable="true"
+    android:id = "@+id/navigation_fragment"
+    android:layout_gravity = "start"
+    android:layout_width = "280dp"
+    android:layout_height = "match_parent"
+    android:name="com.example.bookac.fragments.NavigationFragment"
+    tools:layout="@layout/fragment_navigation_drawer"
+    />
+</android.support.v4.widget.DrawerLayout>

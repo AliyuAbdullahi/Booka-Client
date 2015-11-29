@@ -6,8 +6,10 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -20,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
@@ -41,6 +44,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bookac.Adapters.SearchAutoCompleteAdapter;
 import com.example.bookac.R;
+import com.example.bookac.fragments.NavigationFragment;
 import com.example.bookac.singletons.Chef;
 import com.example.bookac.singletons.User;
 import com.google.android.gms.location.LocationRequest;
@@ -116,7 +120,8 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
   MarkerOptions newYorkCity;
   myAdapter adapter;
   private boolean isResume;
-
+  DrawerLayout layout;
+  NavigationFragment navigationFragment;
   /*
    * the onCreate method starts the activity and renders the view
     * */
@@ -126,6 +131,14 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     setContentView (R.layout.activity_user_home_page);
     toolbar = (Toolbar) findViewById (R.id.toolbar);
     setSupportActionBar (toolbar);
+    layout = (DrawerLayout)findViewById (R.id.drawerLayoutuserhomepage);
+    setSupportActionBar (toolbar);
+
+
+
+
+    navigationFragment = (NavigationFragment)getSupportFragmentManager ().findFragmentById (R.id.navigation_fragment);
+    navigationFragment.setUp (R.id.navigation_fragment, layout, toolbar);
     listItemAvailableProgressBar = (ProgressBar) findViewById (R.id.progressBar);
     autoCompleteTextView = (AutoCompleteTextView)findViewById (R.id.autocomplete_place_text_view);
     searchCard = (CardView)findViewById (R.id.searchcard);
@@ -201,6 +214,17 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   //getAllcheffsAround a location using Url
+
+  //cleanup toolbar
+  public int getStatusBarHeight() {
+    int result = 0;
+    int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+    if (resourceId > 0) {
+      result = getResources().getDimensionPixelSize(resourceId);
+    }
+    return result;
+  }
+
 
   public void getAllCheffsArround (final String chefUrl) {
     RequestQueue que = Volley.newRequestQueue (UserHomePage.this);

@@ -4,13 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,9 +29,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bookac.activities.UserHomePage;
+import com.example.bookac.fragments.NavigationFragment;
 import com.example.bookac.singletons.Chef;
+import com.example.bookac.singletons.ItemCart;
 import com.example.bookac.singletons.MenuItem;
 import com.example.bookac.singletons.User;
+import com.example.bookac.singletons.UserCart;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -38,6 +45,9 @@ import java.util.ArrayList;
 
 public class Menu extends AppCompatActivity {
   Chef chef = new Chef ();
+  DrawerLayout mdrawerLayout;
+  NavigationFragment navigationFragment;
+
   ListView listView;
   private final String CHEF_MENU_URL = "http://mybukka.herokuapp.com/api/v1/bukka/chef/menu/";
   String uid;
@@ -49,6 +59,13 @@ public class Menu extends AppCompatActivity {
     getIntentFromChefMenuActiviyt ();
     Toolbar toolbar = (Toolbar) findViewById (R.id.toolbarmx);
     setSupportActionBar (toolbar);
+    mdrawerLayout = (DrawerLayout)findViewById (R.id.menudrawer);
+
+    navigationFragment = (NavigationFragment)getSupportFragmentManager ().findFragmentById (R.id.navigation_fragment);
+
+    navigationFragment.setUp (R.id.navigation_fragment, mdrawerLayout, toolbar);
+
+
     getSupportActionBar ().setTitle ("");
 
     getChefMenu (CHEF_MENU_URL);
@@ -67,6 +84,17 @@ public class Menu extends AppCompatActivity {
     getMenuInflater ().inflate (R.menu.user_menu, menu);
     return true;
   }
+
+  //cleanup toolbar
+  public int getStatusBarHeight() {
+    int result = 0;
+    int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+    if (resourceId > 0) {
+      result = getResources().getDimensionPixelSize(resourceId);
+    }
+    return result;
+  }
+
 
   @Override
   public boolean onOptionsItemSelected (android.view.MenuItem item) {
@@ -160,8 +188,8 @@ public class Menu extends AppCompatActivity {
       return position;
     }
 
-    public View getView (int position, View convertView, ViewGroup parent) {
-      MenuItem menuItem = chef.menuItems.get (position);
+    public View getView (final int position, View convertView, ViewGroup parent) {
+      final MenuItem menuItem = chef.menuItems.get (position);
       View row = null;
       if (convertView == null) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
@@ -175,6 +203,16 @@ public class Menu extends AppCompatActivity {
       TextView desertProducer = (TextView)row.findViewById (R.id.desertProducer);
       TextView desertPrice = (TextView)row.findViewById (R.id.desertPrice);
       ImageView desertImage = (ImageView)row.findViewById (R.id.desertImage);
+      Button addToCart = (Button)row.findViewById (R.id.addTocart);
+      addToCart.setOnClickListener (new View.OnClickListener () {
+        @Override
+        public void onClick (View v) {
+          ItemCart.INSTANCE.addToItem (menuItem);
+          if(ItemCart.INSTANCE.getSize () > 0){
+            Toast.makeText (getApplicationContext (), "Item Added to cart", Toast.LENGTH_SHORT).show ();
+          }
+        }
+      });
 
       try{
         desertName.setText (menuItem.name);

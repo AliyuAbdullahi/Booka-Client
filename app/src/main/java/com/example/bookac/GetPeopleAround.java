@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Picture;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -23,12 +24,15 @@ import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -48,6 +52,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bookac.activities.UserHomePage;
+import com.example.bookac.fragments.NavigationFragment;
 import com.example.bookac.singletons.Chef;
 import com.example.bookac.singletons.User;
 import com.google.android.gms.common.ConnectionResult;
@@ -66,6 +71,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.larvalabs.svgandroid.SVG;
 import com.larvalabs.svgandroid.SVGParser;
+import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -83,19 +89,17 @@ import logger.Log;
 public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, LocationListener,
         GoogleApiClient.OnConnectionFailedListener {
+  private DrawerLayout mdrawerLayout;
+  private ActionBarDrawerToggle toggle;
+  NavigationFragment navigationFragment;
   private RelativeLayout goNow;
   TextView goToLocation;
   double latitud;
   double longitud;
-  ProgressBar waitingForLocation;
   private Location mLastLocation;
   private String WAITING_FOR_LOCATION = "Waiting for Location";
   ImageView enterLocation;
-  private LocationRequest mLocationRequest;
   private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
-  private static int UPDATE_INTERVAL = 10000; // 10 sec
-  private static int FATEST_INTERVAL = 5000; // 5 sec
-  private static int DISPLACEMENT = 10; // 10 meters
 
   private GoogleApiClient mGoogleApiClient;
   private GoogleMap mMap;
@@ -113,6 +117,11 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
   protected void onCreate (Bundle savedInstanceState) {
     super.onCreate (savedInstanceState);
     setContentView (R.layout.activity_get_people_around);
+
+    mdrawerLayout = (DrawerLayout)findViewById (R.id.drawerLayout);
+
+     navigationFragment = (NavigationFragment)getSupportFragmentManager ().findFragmentById (R.id.navigation_fragment);
+
     showGpsPlease ();
     if (checkPlayServices ()) {
 
@@ -121,7 +130,11 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
     }
     toolbar = (Toolbar) findViewById (R.id.toolbarpeople);
     setSupportActionBar (toolbar);
-    userImage = (com.pkmmte.view.CircularImageView)
+
+
+
+    getSupportActionBar ().setDisplayHomeAsUpEnabled (true);
+    userImage = (CircularImageView)
             findViewById (R.id.myAvartar);
     try {
       Picasso.with (GetPeopleAround.this).load (User.imageUrl)
@@ -130,6 +143,7 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
     } catch (Exception e) {
       e.printStackTrace ();
     }
+    navigationFragment.setUp (R.id.navigation_fragment, mdrawerLayout, toolbar);
     final ImageView clearText = (ImageView) findViewById (R.id.cancelImage);
     location = (TextView) findViewById (R.id.location);
     body = (LinearLayout) findViewById (R.id.body);
@@ -152,7 +166,7 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
         }
       }
     });
-    waitingForLocation = (ProgressBar) findViewById (R.id.progress);
+
     location.setOnTouchListener (new View.OnTouchListener () {
       @Override
       public boolean onTouch (View v, MotionEvent event) {
@@ -209,6 +223,17 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
     }
     return true;
   }
+
+
+  public int getStatusBarHeight() {
+    int result = 0;
+    int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+    if (resourceId > 0) {
+      result = getResources().getDimensionPixelSize(resourceId);
+    }
+    return result;
+  }
+
 
   @Override
   protected void onActivityResult (int requestCode, int resultCode, Intent data) {
@@ -274,7 +299,6 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
           cardView.setVisibility (View.VISIBLE);
           cardView.startAnimation (show);
           enterLocation.setImageResource (R.drawable.getcheflocationactive);
-          waitingForLocation.setVisibility (View.INVISIBLE);
           goToLocation.setText ("Find Chefs in " + location.getText ().toString ());
           CameraPosition newPosition = CameraPosition.builder ().target (latLng)
                   .zoom (15).build ();
@@ -283,9 +307,8 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
         } else {
           cardView.startAnimation (hide);
           cardView.setVisibility (View.GONE);
-          goToLocation.setText ("");
+          goToLocation.setText ("In " + location.getText ().toString ());
           enterLocation.setImageResource (R.drawable.gotocheflocation);
-          waitingForLocation.setVisibility (View.VISIBLE);
           CameraPosition newPosition = CameraPosition.builder ().target (latLng)
                   .zoom (15).build ();
           mMap.animateCamera (CameraUpdateFactory.newCameraPosition (newPosition), 500, null);
@@ -393,11 +416,9 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
                     + ", " + addresses.get (0).getCountryName ());
             if (visible && isOnline () && !(location.getText ().toString ().equalsIgnoreCase (WAITING_FOR_LOCATION))) {
               goToLocation.setText ("Find Chefs in " + addresses.get (0).getFeatureName () + ", " + addresses.get (0).getAdminArea ());
-              waitingForLocation.setVisibility (View.INVISIBLE);
               enterLocation.setImageResource (R.drawable.getcheflocationactive);
             } else {
               goToLocation.setText ("Tap map to activate");
-              waitingForLocation.setVisibility (View.VISIBLE);
               enterLocation.setImageResource (R.drawable.gotocheflocation);
             }
           }

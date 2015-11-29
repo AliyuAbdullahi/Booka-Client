@@ -86,7 +86,9 @@ public class UserLogin extends Fragment {
               @Override
               public void onResponse (String response) {
                 String userImageUrl = null;
-
+                String firstName = null;
+                String lastName = null;
+                Log.e("Response: ", response);
                 try {
                   JSONObject responseObject = new JSONObject (response);
                   JSONObject authObject = responseObject.getJSONObject ("auth");
@@ -96,6 +98,11 @@ public class UserLogin extends Fragment {
                   User.imageUrl = userImageUrl;
                   User.uid = authObject.getString ("uid");
                   User.token = token;
+                  JSONObject userObject = responseObject.getJSONObject ("userObj");
+                  firstName = userObject.getString ("first_name");
+                  lastName = userObject.getString ("last_name");
+                  User.firstName = firstName;
+                  User.lastName = lastName;
 
                 } catch (JSONException e) {
                   e.printStackTrace ();

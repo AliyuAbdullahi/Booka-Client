@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.example.bookac.Menu;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,9 @@ public class User {
   public static ArrayList<Chef> myChef;
   public static String whatever = "";
   public static  String imageUrl = null;
+  public static String name = "";
+  public static String firstName = "";
+  public static String lastName = "";
   public static String token = null;
   public static  double longitude = 0;
   public static  double latitude = 0;
