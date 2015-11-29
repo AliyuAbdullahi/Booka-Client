@@ -28,6 +28,10 @@ public enum ItemCart {
     return items.size ();
   }
 
+  public void delete(int position){
+    items.remove (position);
+  }
+
   public boolean deleteAll(){
     items.clear ();
     return items.size () <= 0;

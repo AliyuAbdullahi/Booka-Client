@@ -1,5 +1,6 @@
 package com.example.bookac;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -54,7 +56,34 @@ public class Cart extends AppCompatActivity {
     final myGridAdapter adapter = new myGridAdapter (getApplicationContext ());
 
     gridView.setAdapter (adapter);
-
+    gridView.setOnItemLongClickListener (new AdapterView.OnItemLongClickListener () {
+      @Override
+      public boolean onItemLongClick (AdapterView<?> parent, View view, final int position, long id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder (Cart.this);
+        builder.setTitle ("Delete " + ItemCart.INSTANCE.getItems (position).name + " ?");
+        builder.setPositiveButton ("Yes", new DialogInterface.OnClickListener () {
+          @Override
+          public void onClick (DialogInterface dialog, int which) {
+            String content = ItemCart.INSTANCE.getItems (position).name;
+            ItemCart.INSTANCE.delete (position);
+            Toast.makeText (Cart.this, content + " deleted", Toast.LENGTH_SHORT).show ();
+            adapter.notifyDataSetChanged ();
+            if (ItemCart.INSTANCE.getAllItems ().size () <= 0){
+              ItemCart.INSTANCE.itemIsinCart = false;
+              noItemAvailble.setVisibility (View.VISIBLE);
+            }
+          }
+        });
+        builder.setNegativeButton ("No", new DialogInterface.OnClickListener () {
+          @Override
+          public void onClick (DialogInterface dialog, int which) {
+            dialog.dismiss ();
+          }
+        });
+        builder.show ();
+        return true;
+      }
+    });
     /**
      * The floating action button is used for deleting all items
      */
