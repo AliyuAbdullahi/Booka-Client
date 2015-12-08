@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
+  android:orientation="vertical"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
@@ -25,24 +26,46 @@
     <View
       android:background="#A4443B"
       android:layout_width="match_parent"
-      android:layout_height="170dp"/>
+      android:layout_height="100dp"/>
     <TextView
+      android:layout_gravity="center_horizontal"
       android:textColor="#fff"
       android:textStyle="bold"
-      android:layout_marginLeft="30dp"
-      android:layout_marginTop="80dp"
+      android:layout_marginTop="32dp"
       android:text="About"
-      android:textSize="32sp"
+      android:textSize="30sp"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"/>
-    <include layout="@layout/content_about"
-             android:layout_marginTop="130dp"
+    <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent">
+      <include layout="@layout/content_about"
+               android:layout_marginTop="100dp"
+               android:layout_marginLeft="30dp"
+               android:layout_marginRight="30dp"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:id="@+id/include"/>
+      <ImageView
+        android:background="#f00"
+        android:src="@drawable/pin"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/include"
+        android:layout_alignLeft="@+id/include"
+        android:layout_alignStart="@+id/include"/>
 
-             android:layout_marginLeft="30dp"
-             android:layout_marginRight="30dp"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"/>
+      <ImageView
+        android:src="@drawable/pin"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/imageView"
+        android:layout_alignTop="@+id/include"
+        android:layout_alignRight="@+id/include"
+        android:layout_alignEnd="@+id/include"/>
+    </RelativeLayout>
+
   </FrameLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

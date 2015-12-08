@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,12 +47,15 @@ import java.util.ArrayList;
 
 public class Menu extends AppCompatActivity {
   Chef chef = new Chef ();
+  Boolean notLoaded = true;
   DrawerLayout mdrawerLayout;
   NavigationFragment navigationFragment;
-
+  ProgressBar loading;
   ListView listView;
+  TextView menuTitle;
   private final String CHEF_MENU_URL = "http://mybukka.herokuapp.com/api/v1/bukka/chef/menu/";
   String uid;
+  private String name;
 
   @Override
   protected void onCreate (Bundle savedInstanceState) {
@@ -78,8 +82,13 @@ public class Menu extends AppCompatActivity {
     final Drawable upArrow = getResources ().getDrawable (R.drawable.abc_ic_ab_back_mtrl_am_alpha);
     upArrow.setColorFilter (getResources ().getColor (android.R.color.white), PorterDuff.Mode.SRC_ATOP);
     getSupportActionBar ().setHomeAsUpIndicator (upArrow);
-
+    loading = (ProgressBar)findViewById (R.id.progressMenu);
+    menuTitle = (TextView)findViewById (R.id.menu_title);
+    menuTitle.setText (name);
     listView = (ListView)findViewById (R.id.menu_items);
+    if(notLoaded){
+      loading.setVisibility (View.VISIBLE);
+    }
   }
 
   @Override
@@ -121,6 +130,7 @@ public class Menu extends AppCompatActivity {
   public void getIntentFromChefMenuActiviyt(){
     Intent getIntent = getIntent ();
     uid = getIntent.getStringExtra ("uid");
+    name = getIntent.getStringExtra ("nickName");
   }
 
   public void getChefMenu(String url){
@@ -144,6 +154,8 @@ public class Menu extends AppCompatActivity {
           for(int i = 0; i < imageUrls.length (); i++){
             item.imageUrl.add ((String) imageUrls.get(1));
           }
+          notLoaded = false;
+          loading.setVisibility (View.INVISIBLE);
           chef.menuItems.add (item);
           menuAdapter menuAdapter = new menuAdapter (Menu.this, chef);
           listView.setAdapter (menuAdapter);
@@ -206,6 +218,7 @@ public class Menu extends AppCompatActivity {
       TextView desertName = (TextView)row.findViewById (R.id.desertName);
       TextView desertProducer = (TextView)row.findViewById (R.id.desertProducer);
       TextView desertPrice = (TextView)row.findViewById (R.id.desertPrice);
+      menuTitle = (TextView)findViewById (R.id.menu_title);
       ImageView desertImage = (ImageView)row.findViewById (R.id.desertImage);
       Button addToCart = (Button)row.findViewById (R.id.addTocart);
       addToCart.setOnClickListener (new View.OnClickListener () {

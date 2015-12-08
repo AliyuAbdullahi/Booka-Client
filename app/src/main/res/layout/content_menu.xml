@@ -12,9 +12,9 @@
     android:id="@+id/viewone"
     android:background="#9C312B"
     android:layout_width="match_parent"
-    android:layout_height="200dp"/>
+    android:layout_height="120dp"/>
   <TextView
-    android:layout_marginTop="60dp"
+    android:layout_marginTop="40dp"
     android:textColor="#fff"
     android:text="Menu"
     android:textSize="32sp"
@@ -27,17 +27,18 @@
     android:layout_marginStart="36dp"
     android:layout_marginBottom="53dp"/>
   <TextView
+    android:id="@+id/menu_title"
     android:layout_marginLeft="36dp"
     android:layout_marginStart="36dp"
     android:layout_marginBottom="53dp"
-    android:layout_marginTop="90sp"
+    android:layout_marginTop="70sp"
     android:textColor="#fff"
     android:text="Iya alakara"
     android:textSize="28sp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
   <LinearLayout
-    android:layout_marginTop="150dp"
+    android:layout_marginTop="120dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:layout_width="wrap_content"
@@ -50,4 +51,12 @@
     android:layout_height="match_parent">
   </ListView>
   </LinearLayout>
+
+  <ProgressBar
+    android:layout_marginTop="300dp"
+    android:layout_centerInParent="true"
+    android:id="@+id/progressMenu"
+    android:layout_width="70dp"
+    android:layout_height="70dp"
+    android:layout_gravity="center_horizontal|top"/>
 </FrameLayout>

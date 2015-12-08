@@ -101,6 +101,7 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
         first.setBackgroundColor (Color.argb (5, 300, 200, 100));
         Intent moveToMenuActivity = new Intent (ChefMenu.this, com.example.bookac.Menu.class);
         moveToMenuActivity.putExtra ("uid", chefUid);
+        moveToMenuActivity.putExtra ("nickName", chefNick);
         startActivity (moveToMenuActivity);
         overridePendingTransition (R.anim.right_in, R.anim.left_out);
       }

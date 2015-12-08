@@ -266,10 +266,15 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
 
 
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            double allLatitudes = 0;
+            double allLongitudes = 0;
             try{
               for(Chef nchef : chefs){
+
                 double lat = nchef.latitude;
                 double longit = nchef.longitude;
+                allLatitudes += nchef.latitude;
+                allLongitudes += nchef.longitude;
                 builder.include (new LatLng (lat, longit));
                 LatLngBounds bounds = builder.build();
                 PolylineOptions rectOptions = new PolylineOptions()
@@ -280,6 +285,11 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
                         .title (nchef.address).draggable (true)
                         .icon (BitmapDescriptorFactory.fromResource (R.drawable.icon_marker)));
               }
+              double averageLatitude = allLatitudes / chefs.size ();
+              double averageLongitude = allLongitudes / chefs.size ();
+              CameraPosition position = CameraPosition.builder ()
+                      .target (new LatLng (averageLatitude, averageLongitude)).zoom (15).build ();
+              map.animateCamera (CameraUpdateFactory.newCameraPosition (position));
             }catch (Exception e){
               e.printStackTrace ();
             }
@@ -569,7 +579,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
               .findViewById (R.id.avatar);
       TextView chefname = (TextView)row.findViewById (R.id.chefname);
       TextView chefaddress = (TextView)row.findViewById (R.id.chefaddress);
-      TextView chefdistance = (TextView)row.findViewById (R.id.chefdistance);
+//      TextView chefdistance = (TextView)row.findViewById (R.id.chefdistance);
       String text = chef.nickName;
       try{
         chefname.setText (text);

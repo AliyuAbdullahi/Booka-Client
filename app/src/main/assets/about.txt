@@ -1,7 +1,7 @@
 <b>Bukka</b> is reinventing the way you buy your daily meals.<br>
 
-<b>Bukka</b> is a person to person location based <span style="color: blue">food mobile application</span> that uses seamless connections to connect cooks to their client.
+<b>Bukka</b> is a person to person location based <span style="color: #A4443B">food mobile application</span> that uses seamless connections to connect cooks to their client.
 
 <br>We make your favourite food more available to you by connecting you to all available chefs in your neighbourhood, allow you to get a large variety of cuisine, freshly made and cheaper than restaurant.
 <br>
-We are opening up more opportunities for<span style="color:blue"> professional and non-professional</span> chefs to earn money without having to open a restaurant. <br>All you need is your mobile phone and a domestic kitchen.
+We are opening up more opportunities for<span style="color:#A4443B"> professional and non-professional</span> chefs to earn money without having to open a restaurant. <br>All you need is your mobile phone and a domestic kitchen.
