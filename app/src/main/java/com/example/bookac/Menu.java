@@ -30,7 +30,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bookac.activities.UserHomePage;
+import com.example.bookac.constants.Constants;
 import com.example.bookac.fragments.NavigationFragment;
+import com.example.bookac.fragments.PaymentDialog;
 import com.example.bookac.singletons.Chef;
 import com.example.bookac.singletons.ItemCart;
 import com.example.bookac.singletons.MenuItem;
@@ -48,12 +50,15 @@ import java.util.ArrayList;
 public class Menu extends AppCompatActivity {
   Chef chef = new Chef ();
   Boolean notLoaded = true;
+
+  Bundle args = new Bundle();
+
+
   DrawerLayout mdrawerLayout;
   NavigationFragment navigationFragment;
-  ProgressBar loading;
   ListView listView;
   TextView menuTitle;
-  private final String CHEF_MENU_URL = "http://mybukka.herokuapp.com/api/v1/bukka/chef/menu/";
+  private final String CHEF_MENU_URL = Constants.MENU_URL;
   String uid;
   private String name;
 
@@ -82,13 +87,9 @@ public class Menu extends AppCompatActivity {
     final Drawable upArrow = getResources ().getDrawable (R.drawable.abc_ic_ab_back_mtrl_am_alpha);
     upArrow.setColorFilter (getResources ().getColor (android.R.color.white), PorterDuff.Mode.SRC_ATOP);
     getSupportActionBar ().setHomeAsUpIndicator (upArrow);
-    loading = (ProgressBar)findViewById (R.id.progressMenu);
     menuTitle = (TextView)findViewById (R.id.menu_title);
     menuTitle.setText (name);
     listView = (ListView)findViewById (R.id.menu_items);
-    if(notLoaded){
-      loading.setVisibility (View.VISIBLE);
-    }
   }
 
   @Override
@@ -138,7 +139,7 @@ public class Menu extends AppCompatActivity {
     StringRequest request = new StringRequest (Request.Method.GET, url+ uid, new Response.Listener<String> () {
       @Override
       public void onResponse (String response) {
-
+        Toast.makeText (getApplicationContext (), response, Toast.LENGTH_SHORT).show ();
         try {
           Chef chef = new Chef ();
           JSONObject responseObject = new JSONObject (response);
@@ -155,7 +156,6 @@ public class Menu extends AppCompatActivity {
             item.imageUrl.add ((String) imageUrls.get(1));
           }
           notLoaded = false;
-          loading.setVisibility (View.INVISIBLE);
           chef.menuItems.add (item);
           menuAdapter menuAdapter = new menuAdapter (Menu.this, chef);
           listView.setAdapter (menuAdapter);
@@ -221,6 +221,16 @@ public class Menu extends AppCompatActivity {
       menuTitle = (TextView)findViewById (R.id.menu_title);
       ImageView desertImage = (ImageView)row.findViewById (R.id.desertImage);
       Button addToCart = (Button)row.findViewById (R.id.addTocart);
+      Button makePurchase = (Button)row.findViewById (R.id.makePurchase);
+      makePurchase.setOnClickListener (new View.OnClickListener () {
+        @Override
+        public void onClick (View v) {
+          PaymentDialog paymentDialog = new PaymentDialog ();
+          setUpIntent (args, menuItem.price);
+          paymentDialog.setArguments(args);
+          paymentDialog.show (getFragmentManager (), "payment_dialog");
+        }
+      });
       addToCart.setOnClickListener (new View.OnClickListener () {
         @Override
         public void onClick (View v) {
@@ -260,7 +270,13 @@ public class Menu extends AppCompatActivity {
 
   @Override
   public void onBackPressed () {
-    overridePendingTransition(R.anim.left_in, R.anim.right_out);
+    overridePendingTransition (R.anim.left_in, R.anim.right_out);
     super.onBackPressed ();
   }
+
+  public void setUpIntent( Bundle args, double price) {
+    args.putDouble ("price", price);
+
+  }
+
 }

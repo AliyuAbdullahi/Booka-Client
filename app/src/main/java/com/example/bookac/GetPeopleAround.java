@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Picture;
 import android.graphics.drawable.Drawable;
@@ -55,6 +56,7 @@ import com.example.bookac.activities.UserHomePage;
 import com.example.bookac.fragments.NavigationFragment;
 import com.example.bookac.singletons.Chef;
 import com.example.bookac.singletons.User;
+import com.example.bookac.tools.PicassoImageLoader;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -67,18 +69,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.vision.barcode.Barcode;
-import com.larvalabs.svgandroid.SVG;
-import com.larvalabs.svgandroid.SVGParser;
+
 import com.pkmmte.view.CircularImageView;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
@@ -94,7 +91,9 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
   NavigationFragment navigationFragment;
   private RelativeLayout goNow;
   TextView goToLocation;
+  Bitmap image;
   double latitud;
+  Bitmap myRoundedImage;
   double longitud;
   private Location mLastLocation;
   private String WAITING_FOR_LOCATION = "Waiting for Location";
@@ -117,7 +116,7 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
   protected void onCreate (Bundle savedInstanceState) {
     super.onCreate (savedInstanceState);
     setContentView (R.layout.activity_get_people_around);
-
+    PicassoImageLoader picassoImageLoader = new PicassoImageLoader (GetPeopleAround.this);
     mdrawerLayout = (DrawerLayout)findViewById (R.id.drawerLayout);
 
      navigationFragment = (NavigationFragment)getSupportFragmentManager ().findFragmentById (R.id.navigation_fragment);
@@ -136,13 +135,17 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
     getSupportActionBar ().setDisplayHomeAsUpEnabled (true);
     userImage = (CircularImageView)
             findViewById (R.id.myAvartar);
-    try {
-      Picasso.with (GetPeopleAround.this).load (User.imageUrl)
-              .error (R.drawable.logo).placeholder (R.drawable.logo)
-              .into (userImage);
-    } catch (Exception e) {
-      e.printStackTrace ();
+    if(savedInstanceState != null){
+      image = (Bitmap) savedInstanceState.getParcelable ("BitmapImage");
+      userImage.setImageBitmap (image);
     }
+    else {
+      picassoImageLoader.loadImage (userImage, User.imageUrl);
+    }
+
+    userImage.setDrawingCacheEnabled (true);
+    myRoundedImage = userImage.getDrawingCache();
+
     navigationFragment.setUp (R.id.navigation_fragment, mdrawerLayout, toolbar);
     final ImageView clearText = (ImageView) findViewById (R.id.cancelImage);
     location = (TextView) findViewById (R.id.location);
@@ -464,10 +467,25 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
   }
 
   @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putParcelable ("BitmapImage", myRoundedImage);
+  }
+
+  @Override
   protected void onResume () {
     super.onResume ();
-
+    PicassoImageLoader loader = new PicassoImageLoader (GetPeopleAround.this);
+    loader.loadImage (userImage, User.imageUrl );
+    Toast.makeText (getApplicationContext (), User.imageUrl, Toast.LENGTH_SHORT).show ();
     checkPlayServices ();
+  }
+
+  @Override
+  public void onActivityReenter (int resultCode, Intent data) {
+    super.onActivityReenter (resultCode, data);
+    PicassoImageLoader loader = new PicassoImageLoader (GetPeopleAround.this);
+    loader.loadImage (userImage, User.imageUrl);
   }
 
   public class setUpListView extends AsyncTask<Void, Void, Void> {
@@ -609,5 +627,4 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
       showGPSDisabledAlertToUser();
     }
   }
-
 }

@@ -44,6 +44,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bookac.Adapters.SearchAutoCompleteAdapter;
 import com.example.bookac.R;
+import com.example.bookac.constants.Constants;
 import com.example.bookac.fragments.NavigationFragment;
 import com.example.bookac.singletons.Chef;
 import com.example.bookac.singletons.User;
@@ -187,7 +188,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
 
      //the getAllCHeffsArround method is used to get all the chefs around a particular locatio
     getCoordinates ();
-    getAllCheffsArround ("http://mybukka.herokuapp.com/api/v1/bukka/chefs/" + lat + "/" + lng);
+    getAllCheffsArround (Constants.PEOPLE_AROUND_URL + lat + "/" + lng);
     try{
 
     }catch (Exception e){

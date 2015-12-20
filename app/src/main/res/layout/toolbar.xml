@@ -3,10 +3,10 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:textColor="#fff"
-                                   android:elevation="8dp"
+  android:elevation="8dp"
   android:layout_height="wrap_content"
-   android:background="#fff"
-   app:theme="@style/ToolBarThem"
+  android:background="#fff"
+  app:theme="@style/ToolBarThem"
 
   app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
   <RelativeLayout
@@ -24,7 +24,6 @@
       android:src="@drawable/logo"
       android:layout_centerHorizontal="true"
       android:gravity="center_vertical"
-      android:layout_marginLeft="5dp"
       android:layout_alignParentRight="true"
       android:layout_alignParentLeft="true"
       android:layout_toRightOf="@id/myAvartar"

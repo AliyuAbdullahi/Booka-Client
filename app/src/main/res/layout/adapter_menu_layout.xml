@@ -68,6 +68,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
           <Button
+            android:id="@+id/makePurchase"
             android:layout_weight="1"
             android:layout_below="@id/desertPrice"
             android:text="Make purchase"

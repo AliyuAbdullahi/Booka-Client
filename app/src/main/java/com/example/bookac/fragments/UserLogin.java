@@ -36,6 +36,7 @@ import com.example.bookac.AutoComplete;
 import com.example.bookac.GetPeopleAround;
 import com.example.bookac.R;
 import com.example.bookac.Search;
+import com.example.bookac.constants.Constants;
 import com.example.bookac.singletons.User;
 
 import org.json.JSONException;
@@ -82,7 +83,7 @@ public class UserLogin extends Fragment {
             dialog.setTitle ("loading content...");
             dialog.show ();
             RequestQueue queue = Volley.newRequestQueue (getActivity ());
-            StringRequest request = new StringRequest (Request.Method.POST, "http://mybukka.herokuapp.com/api/v1/bukka/auth/login", new Response.Listener<String> () {
+            StringRequest request = new StringRequest (Request.Method.POST, Constants.LOGIN_URL, new Response.Listener<String> () {
               @Override
               public void onResponse (String response) {
                 String userImageUrl = null;
@@ -150,8 +151,6 @@ public class UserLogin extends Fragment {
             Toast.makeText (getActivity (),"Enter valid email or password", Toast.LENGTH_SHORT).show ();
           }
         }
-
-
       }
     });
 
