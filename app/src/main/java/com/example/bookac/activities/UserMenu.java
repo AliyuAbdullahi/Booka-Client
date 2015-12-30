@@ -89,8 +89,12 @@ public class UserMenu extends AppCompatActivity {
     CollapsingToolbarLayout collapsingToolbar =
             (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
     collapsingToolbar.setTitleEnabled (false);
+    String addressName = chefAddrss.split (",")[0];
+    String[] addressLocale = chefAddrss.split (",");
+    String myAddress = addressLocale[addressLocale.length-1];
 
-    chefAddress.setText (chefAddrss);
+    try { chefAddress.setText (addressName + ", " + myAddress); } catch (NullPointerException e){e.printStackTrace ();}
+
 
     getSupportActionBar ().setDisplayHomeAsUpEnabled (true);
     RecyclerView rv = (RecyclerView)findViewById (R.id.rvToDoList);
