@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/drawer_layout_menu"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:clickable="true"
+  android:focusableInTouchMode="true">
+<android.support.design.widget.CoordinatorLayout
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:fitsSystemWindows="true"
+  tools:context="com.example.bookac.activities.UserMenu">
+
+  <android.support.design.widget.AppBarLayout
+    android:id="@+id/app_bar"
+    android:background="#9C312B"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/app_bar_height"
+    android:fitsSystemWindows="true"
+    android:theme="@style/AppTheme.AppBarOverlay">
+
+    <android.support.design.widget.CollapsingToolbarLayout
+      android:id="@+id/toolbar_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:fitsSystemWindows="true"
+      app:contentScrim="#9C312B"
+      app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+      <com.pkmmte.view.CircularImageView
+        android:paddingTop="35dp"
+        android:paddingBottom="80dp"
+        android:layout_marginBottom="30dp"
+        android:id="@+id/backdrop"
+        app:border="true"
+        app:shadow="true"
+        app:border_color="#EEEEEE"
+        app:border_width="2dp"
+        android:layout_gravity="center"
+        android:layout_width="110dp"
+        android:src="@drawable/food"
+        android:layout_height="110dp"
+        android:scaleType="fitCenter"
+        android:fitsSystemWindows="true"
+        app:layout_collapseMode="parallax" />
+
+      <LinearLayout
+        android:gravity="center_vertical"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+          android:id="@+id/callImage"
+          android:background="@drawable/menu_button"
+          android:paddingTop="8dp"
+          android:paddingBottom="8dp"
+          android:layout_weight="1.48"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content">
+          <ImageView
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_call_white_48dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+        </LinearLayout>
+        <LinearLayout
+          android:id="@+id/rateImage"
+          android:background="@drawable/menu_button"
+          android:paddingBottom="20dp"
+          android:paddingTop="20dp"
+          android:paddingLeft="1dp"
+          android:layout_weight="0.82"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent">
+          <TextView
+            android:textColor="#fff"
+            android:gravity="center"
+            android:text="RATE"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        </LinearLayout>
+        <LinearLayout
+          android:id="@+id/reportImage"
+          android:background="@drawable/menu_button"
+          android:layout_weight="1"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent">
+          <TextView
+            android:textColor="#fff"
+            android:gravity="center"
+            android:text="REPORT"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        </LinearLayout>
+      </LinearLayout>
+      <TextView
+
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:layout_gravity="bottom"
+        android:id="@+id/chefMenuName"
+        android:paddingTop="10dp"
+        android:layout_marginBottom="100dp"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:text="Instanbull turkey"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+      <TextView
+        android:gravity="center_horizontal"
+        android:layout_gravity="bottom"
+        android:id="@+id/chefAddress"
+        android:paddingTop="4dp"
+        android:layout_marginBottom="80dp"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:text="Instanbull turkey"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+      <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_collapseMode="pin"
+        app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+    </android.support.design.widget.CollapsingToolbarLayout>
+  </android.support.design.widget.AppBarLayout>
+  <android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipeRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/rvToDoList"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+  </android.support.v7.widget.RecyclerView>
+  </android.support.v4.widget.SwipeRefreshLayout>
+  <!--<include layout="@layout/content_user_menu"/>-->
+
+</android.support.design.widget.CoordinatorLayout>
+  <fragment
+    android:clickable="true"
+    android:id = "@+id/navigation_fragment"
+    android:layout_gravity = "start"
+    android:layout_width = "280dp"
+    android:layout_height = "match_parent"
+    android:name="com.example.bookac.fragments.NavigationFragment"
+    tools:layout="@layout/fragment_navigation_drawer"
+    />
+</android.support.v4.widget.DrawerLayout>

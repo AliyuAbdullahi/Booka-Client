@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2015 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+    android:gravity="center_vertical">
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+      <ImageView
+        android:id="@+id/desert"
+        android:scaleType="centerCrop"
+        android:src="@drawable/desert"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"/>
+      <View
+        android:background="@drawable/view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+      <ImageView
+        android:layout_marginTop="14dp"
+        android:layout_marginRight="8dp"
+        android:id="@+id/sharemeal"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_share_white_48dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"/>
+      <ImageView
+        android:id="@+id/addTocartImage"
+        android:layout_marginTop="14dp"
+        android:layout_marginRight="16dp"
+        android:layout_toLeftOf="@id/sharemeal"
+        android:src="@drawable/ic_add_shopping_cart_white_48dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"/>
+
+    </RelativeLayout>
+  <TextView
+    android:textStyle="bold"
+    android:layout_marginLeft="20dp"
+    android:text="White Mocha"
+    android:id="@+id/nameOfMeal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textAppearance="?attr/textAppearanceListItem"/>
+  <LinearLayout
+    android:layout_gravity="center_horizontal"
+    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_weight="1"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content">
+    <ImageView
+      android:layout_gravity="center_vertical"
+      android:layout_weight="1"
+      android:layout_marginLeft="4dp"
+      android:src="@drawable/cooking"
+      android:layout_width="20dp"
+      android:layout_height="20dp"/>
+    <TextView
+      android:id="@+id/mealType"
+      android:layout_weight="1"
+      android:layout_marginLeft="4dp"
+      android:layout_gravity="center_vertical"
+      android:text="DESERT"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+      </LinearLayout>
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_weight="1"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content">
+    <ImageView
+      android:layout_gravity="center_vertical"
+      android:layout_weight="1"
+      android:layout_marginLeft="4dp"
+      android:src="@drawable/time"
+      android:layout_width="20dp"
+      android:layout_height="20dp"/>
+    <TextView
+      android:id="@+id/cookingTime"
+      android:layout_weight="1"
+      android:layout_marginLeft="4dp"
+      android:layout_gravity="center_vertical"
+      android:text="9 minutes"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+      </LinearLayout>
+    <LinearLayout
+      android:elevation="4dp"
+      android:background="#ccc"
+      android:id="@+id/checkout"
+      android:orientation="horizontal"
+      android:layout_weight="1"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content">
+      <TextView
+        android:id="@+id/price"
+        android:textColor="#9C312B"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_weight="1"
+        android:layout_marginLeft="15dp"
+        android:layout_gravity="center_vertical"
+        android:text="N500"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+      <ImageView
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:src="@drawable/meal_purchase"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
+    </LinearLayout>
+
+  </LinearLayout>
+
+</LinearLayout>

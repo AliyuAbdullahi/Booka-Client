@@ -384,7 +384,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     chefsList.setOnItemClickListener (new AdapterView.OnItemClickListener () {
       @Override
       public void onItemClick (AdapterView<?> parent, View view, int position, long id) {
-        Intent toChefpage = new Intent (UserHomePage.this, ChefMenu.class);
+        Intent toChefpage = new Intent (UserHomePage.this, UserMenu.class);
         toChefpage.putExtra ("phoneNumber", chefs.get (position).phoneNumber);
         toChefpage.putExtra ("longitude", chefs.get (position).longitude);
         toChefpage.putExtra ("latitude", chefs.get (position).latitude);

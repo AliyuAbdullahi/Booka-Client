@@ -27,8 +27,7 @@
     android:theme="@style/AppTheme">
     <meta-data
       android:name="co.paystack.android.PublishableKey"
-      android:value="MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANIsL+RHqfkBiKGn/D1y1QnNrMkKzxWP
-2wkeSokw2OJrCI+d6YGJPrHHx+nmb/Qn885/R01Gw6d7M824qofmCvkCAwEAAQ=="/>
+      android:value="MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANIsL+RHqfkBiKGn/D1y1QnNrMkKzxWP 2wkeSokw2OJrCI+d6YGJPrHHx+nmb/Qn885/R01Gw6d7M824qofmCvkCAwEAAQ=="/>
     <meta-data
       android:name="com.google.android.gms.version"
       android:value="@integer/google_play_services_version"/>
@@ -105,6 +104,16 @@
     <activity
       android:name=".activities.Help"
       android:label="@string/title_activity_help"
+      android:theme="@style/AppTheme">
+    </activity>
+    <activity
+      android:name=".activities.UserMenu"
+      android:label="@string/title_activity_user_menu"
+      android:theme="@style/AppTheme">
+    </activity>
+    <activity
+      android:name=".activities.MakePayment"
+      android:label="@string/title_activity_make_payment"
       android:theme="@style/AppTheme">
     </activity>
   </application>

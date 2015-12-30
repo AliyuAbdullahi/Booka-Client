@@ -167,7 +167,7 @@ public class ChefMenu extends AppCompatActivity implements OnMapReadyCallback {
   public boolean onOptionsItemSelected (MenuItem item) {
     switch (item.getItemId()) {
       case R.id.share:
-        String restaurantBodyString = "Visit us today at "+ chefAddrss+" for your meal and you will be glad you did!";
+        String restaurantBodyString = "Visit us today at " + chefAddrss +" for your meal and you will be glad you did!";
         shareIt ("Visit "+ chefNick+" Resataurant", restaurantBodyString );
         break;
       case android.R.id.home:

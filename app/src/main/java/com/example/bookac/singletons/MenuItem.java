@@ -7,11 +7,12 @@ import java.util.ArrayList;
  */
 public class MenuItem {
   public   String name;
-  public long price;
+  public double price;
   public String description;
   public int quantity;
   public long minutes;
   public ArrayList<String> imageUrl = new ArrayList<> ();
 
   public int doneTime;
+  public int doneTimeInOur;
 }
