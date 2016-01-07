@@ -78,7 +78,7 @@
       android:layout_width="20dp"
       android:layout_height="20dp"/>
     <TextView
-      android:id="@+id/mealType"
+      android:id="@+id/mealTypeX"
       android:layout_weight="1"
       android:layout_marginLeft="4dp"
       android:layout_gravity="center_vertical"
@@ -100,7 +100,7 @@
       android:layout_height="20dp"/>
     <TextView
       android:id="@+id/cookingTime"
-      android:layout_weight="1"
+      android:layout_weight="0.5"
       android:layout_marginLeft="4dp"
       android:layout_gravity="center_vertical"
       android:text="9 minutes"
@@ -126,12 +126,6 @@
         android:text="N500"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-      <ImageView
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:src="@drawable/meal_purchase"
-        android:layout_width="20dp"
-        android:layout_height="20dp"/>
     </LinearLayout>
 
   </LinearLayout>

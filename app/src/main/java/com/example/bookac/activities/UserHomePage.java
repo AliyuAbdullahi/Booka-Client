@@ -48,6 +48,7 @@ import com.example.bookac.constants.Constants;
 import com.example.bookac.fragments.NavigationFragment;
 import com.example.bookac.singletons.Chef;
 import com.example.bookac.singletons.User;
+import com.example.bookac.tools.PicassoImageLoader;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -151,14 +152,9 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
             findViewById (R.id.myAvartar);
 
     //Picassso Library is used to load image into imageview
+    PicassoImageLoader loader = new PicassoImageLoader (UserHomePage.this);
+    loader.loadImage (userImage, User.getImageUrl (UserHomePage.this, "Id"));
 
-    try {
-      Picasso.with (UserHomePage.this).load (User.imageUrl)
-              .error (R.drawable.logo).placeholder (R.drawable.logo)
-              .into (userImage);
-    } catch (Exception e) {
-      e.printStackTrace ();
-    }
     //get All the chefs around
     noChefFound  = (TextView)findViewById (R.id.not_found);
     noChefFound.setVisibility (View.INVISIBLE);
@@ -246,7 +242,10 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
             chef.lastname = currentChef.getString ("last_name");
             chef.nickName = currentChef.getString ("username");
             chef.uid = currentChef.getString ("uid");
-            chef.phoneNumber = Long.parseLong ((decimalFormat.format (Double.parseDouble (currentChef.getString ("phone_number")))));
+            //try{
+              //chef.phoneNumber = Long.parseLong ((decimalFormat.format (Double.parseDouble (currentChef.getString ("phone_number")))));
+
+            //}catch (NullPointerException e){e.printStackTrace ();}
             JSONObject coord = currentChef.getJSONObject ("coords");
             chef.longitude = Double.parseDouble (coord.getString ("lng"));
             chef.latitude = Double.parseDouble (coord.getString ("lat"));
@@ -387,6 +386,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
         Intent toChefpage = new Intent (UserHomePage.this, UserMenu.class);
         toChefpage.putExtra ("phoneNumber", chefs.get (position).phoneNumber);
         toChefpage.putExtra ("longitude", chefs.get (position).longitude);
+        toChefpage.putExtra ("chefProfilePhoto", chefs.get (position).profilePhoto);
         toChefpage.putExtra ("latitude", chefs.get (position).latitude);
         toChefpage.putExtra ("firstname", chefs.get (position).firstname);
         toChefpage.putExtra ("lastname", chefs.get (position).lastname);
@@ -528,13 +528,8 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     getUserData ();
     userImage = (com.pkmmte.view.CircularImageView)
             findViewById (R.id.myAvartar);
-    try {
-      Picasso.with (UserHomePage.this).load (User.imageUrl)
-              .error (R.drawable.logo).placeholder (R.drawable.logo)
-              .into (userImage);
-    }catch (Exception e){
-      e.printStackTrace ();
-    }
+    PicassoImageLoader loader = new PicassoImageLoader (UserHomePage.this);
+    loader.loadImage (userImage, User.getImageUrl (UserHomePage.this, "Id"));
     CameraPosition position = CameraPosition.fromLatLngZoom (new LatLng (6,4),15);
   }
 

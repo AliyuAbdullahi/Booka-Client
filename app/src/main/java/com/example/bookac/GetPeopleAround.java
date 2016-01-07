@@ -140,7 +140,7 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
       userImage.setImageBitmap (image);
     }
     else {
-      picassoImageLoader.loadImage (userImage, User.imageUrl);
+      picassoImageLoader.loadImage (userImage, User.getImageUrl (GetPeopleAround.this, "Id"));
     }
 
     userImage.setDrawingCacheEnabled (true);

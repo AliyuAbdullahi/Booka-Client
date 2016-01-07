@@ -34,7 +34,7 @@
         android:paddingTop="35dp"
         android:paddingBottom="80dp"
         android:layout_marginBottom="30dp"
-        android:id="@+id/backdrop"
+        android:id="@+id/chefAvatarY"
         app:border="true"
         app:shadow="true"
         app:border_color="#EEEEEE"
@@ -67,7 +67,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"/>
         </LinearLayout>
-        <LinearLayout
+        <RelativeLayout
           android:id="@+id/rateImage"
           android:background="@drawable/menu_button"
           android:paddingBottom="20dp"
@@ -77,25 +77,29 @@
           android:layout_width="wrap_content"
           android:layout_height="match_parent">
           <TextView
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
             android:textColor="#fff"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:text="RATE"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-        </LinearLayout>
-        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        </RelativeLayout>
+        <RelativeLayout
           android:id="@+id/reportImage"
           android:background="@drawable/menu_button"
           android:layout_weight="1"
           android:layout_width="wrap_content"
           android:layout_height="match_parent">
           <TextView
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
             android:textColor="#fff"
             android:gravity="center"
             android:text="REPORT"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-        </LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        </RelativeLayout>
       </LinearLayout>
       <TextView
 

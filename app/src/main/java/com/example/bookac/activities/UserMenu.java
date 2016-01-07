@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.DefaultRetryPolicy;
@@ -52,12 +53,13 @@ import logger.Log;
 
 public class UserMenu extends AppCompatActivity {
   public LinearLayout callImage;
-  public LinearLayout rateImage;
-  public LinearLayout reportImage;
+  public RelativeLayout rateImage;
+  public RelativeLayout reportImage;
   public TextView chefAddress;
   private String chefUid;
   private String chefFirstName;
   private String chefLastName;
+  com.pkmmte.view.CircularImageView chefAvatar;
   private String chefNick;
   private String chefAddrss;
   private long phoneNumber;
@@ -77,6 +79,8 @@ public class UserMenu extends AppCompatActivity {
     setContentView (R.layout.activity_user_menu);
     getIntentContent ();
     setUpView ();
+    PicassoImageLoader loader = new PicassoImageLoader (UserMenu.this);
+    loader.loadImage (chefAvatar, getIntent ().getStringExtra ("chefProfilePhoto"));
     Toolbar toolbar = (Toolbar) findViewById (R.id.toolbar);
     setSupportActionBar (toolbar);
 
@@ -88,9 +92,9 @@ public class UserMenu extends AppCompatActivity {
     chefTitle.setText (chefNick);
     CollapsingToolbarLayout collapsingToolbar =
             (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-    collapsingToolbar.setTitleEnabled (false);
-    String addressName = chefAddrss.split (",")[0];
     String[] addressLocale = chefAddrss.split (",");
+    collapsingToolbar.setTitleEnabled (false);
+    String addressName = chefAddrss.split (",")[addressLocale.length-2];
     String myAddress = addressLocale[addressLocale.length-1];
 
     try { chefAddress.setText (addressName + ", " + myAddress); } catch (NullPointerException e){e.printStackTrace ();}
@@ -170,7 +174,6 @@ public class UserMenu extends AppCompatActivity {
             item.doneTime = responseObject.getInt ("min");
             item.doneTimeInOur = responseObject.getInt ("hour");
             item.name = responseObject.getString ("menu");
-            Toast.makeText (getApplicationContext (), item.description + " " + item.price, Toast.LENGTH_SHORT).show ();
             JSONArray imageUrls = responseObject.getJSONArray ("images");
 
               for(int j = 0; j < imageUrls.length (); j++) {
@@ -230,7 +233,7 @@ public class UserMenu extends AppCompatActivity {
         super(view);
         mView = view;
         nameOfMeal = (TextView)view.findViewById (R.id.nameOfMeal);
-        mealType = (TextView)view.findViewById (R.id.mealType);
+        mealType = (TextView)view.findViewById (R.id.mealTypeX);
         cookingTime = (TextView)view.findViewById (R.id.cookingTime);
         price = (TextView)view.findViewById (R.id.price);
         desertImage = (ImageView)view.findViewById (R.id.desert);
@@ -340,10 +343,11 @@ public class UserMenu extends AppCompatActivity {
   }
 
   private void setUpView(){
+    chefAvatar = (com.pkmmte.view.CircularImageView)findViewById (R.id.chefAvatarY);
     mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById (R.id.swipeRefreshLayout);
     callImage = (LinearLayout)findViewById (R.id.callImage);
-    rateImage = (LinearLayout)findViewById (R.id.rateImage);
-    reportImage = (LinearLayout)findViewById (R.id.reportImage);
+    rateImage = (RelativeLayout)findViewById (R.id.rateImage);
+    reportImage = (RelativeLayout)findViewById (R.id.reportImage);
     chefAddress = (TextView)findViewById (R.id.chefAddress);
     chefTitle = (TextView)findViewById (R.id.chefMenuName);
   }

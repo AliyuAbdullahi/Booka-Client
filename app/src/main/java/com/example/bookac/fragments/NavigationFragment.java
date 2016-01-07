@@ -27,6 +27,7 @@ import com.example.bookac.activities.Settings;
 import com.example.bookac.activities.UserHomePage;
 import com.example.bookac.singletons.Chef;
 import com.example.bookac.singletons.User;
+import com.example.bookac.tools.PicassoImageLoader;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -50,13 +51,8 @@ public class NavigationFragment extends Fragment {
     listView = (ListView)view.findViewById (R.id.sideNavList);
 
     userImage = (ImageView)view.findViewById (R.id.sideNavAvatar);
-    try {
-      Picasso.with (getActivity ()).load (User.imageUrl)
-              .error (R.drawable.logo).placeholder (R.drawable.logo)
-              .into (userImage);
-    } catch (Exception e) {
-      e.printStackTrace ();
-    }
+    PicassoImageLoader loader = new PicassoImageLoader (getActivity ());
+    loader.loadImage (userImage, User.getImageUrl (getActivity (), "Id"));
     usernameOfsideNav = (TextView)view.findViewById (R.id.userfirstnameforsidenav);
     lastNameOfSideNav = (TextView)view.findViewById (R.id.userlastnameforsidenav);
     usernameOfsideNav.setText (User.firstName);

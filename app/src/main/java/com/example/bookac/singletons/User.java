@@ -37,6 +37,30 @@ public class User {
     }
   }
 
+  public static void saveImageUrl(String id, String value, Context context){
+    SharedPreferences preferences = context.getSharedPreferences (id, Context.MODE_PRIVATE);
+    SharedPreferences.Editor editor = preferences.edit ();
+    editor.putString ("ImageUrl", value);
+    editor.apply ();
+  }
+
+  public static void saveContent(String id, String value, Context context, String key){
+    SharedPreferences preferences = context.getSharedPreferences (id, Context.MODE_PRIVATE);
+    SharedPreferences.Editor editor = preferences.edit ();
+    editor.putString (key, value);
+    editor.apply ();
+  }
+
+  public static String getContent(Context context, String id, String key){
+    SharedPreferences preferences = context.getSharedPreferences (id, Context.MODE_PRIVATE);
+    return preferences.getString (key, "");
+  }
+
+  public static String getImageUrl(Context context, String id){
+    SharedPreferences preferences = context.getSharedPreferences (id, Context.MODE_PRIVATE);
+    return preferences.getString ("ImageUrl", "");
+  }
+
   public static String getDB(Context context, String id, String init) {
     return context.getSharedPreferences(myPrefs, Activity.MODE_PRIVATE).getString(id, init);
   }

@@ -49,6 +49,7 @@ import java.util.Map;
  * Created by aliyuolalekan on 9/18/15.
  */
 public class UserLogin extends Fragment {
+
   EditText email;
   EditText password;
   Button logIn;
@@ -89,13 +90,13 @@ public class UserLogin extends Fragment {
                 String userImageUrl = null;
                 String firstName = null;
                 String lastName = null;
-                Log.e("Response: ", response);
                 try {
                   JSONObject responseObject = new JSONObject (response);
                   JSONObject authObject = responseObject.getJSONObject ("auth");
                   String token = authObject.getString ("token");
                   JSONObject imageUrlObject = authObject.getJSONObject ("password");
                   userImageUrl = imageUrlObject.getString ("profileImageURL");
+                  User.saveImageUrl ("Id", userImageUrl, getActivity ());
                   User.imageUrl = userImageUrl;
                   User.uid = authObject.getString ("uid");
                   User.token = token;
@@ -143,6 +144,7 @@ public class UserLogin extends Fragment {
                 return params;
               }
             };
+
             int socketTimeout = 30000;//30 seconds - change to what you want
             RetryPolicy policy = new DefaultRetryPolicy (socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
             request.setRetryPolicy(policy);

@@ -130,4 +130,7 @@
     "when a user tries to pick up one of cards.\n\n"
   </string>
   <string name="title_activity_make_payment">MakePayment</string>
+  <string name="title_activity_google_facebook_login">GoogleFacebookLogin</string>
+  <string name="title_activity_google_facebook">GoogleFacebook</string>
+  <string name="title_activity_login_redirect">LoginRedirect</string>
 </resources>
