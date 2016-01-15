@@ -10,6 +10,7 @@
   <string name="autocomplete_hint">Enter place name or address</string>
   <string name="selected_place">Last Selected Place:</string>
   <string name="clear_text">Clear Text</string>
+  <string name="facebook_app_id">461844717334831</string>
 
   <!-- getString(String, Object...) does not support HTML tags directly, they need to be encoded first.
   Original string: <b>%1$s</b><br/><i>Place Id: %2$s</i><br/>Address: %3$s<br/>Phone: %4$s<br/>Website: %5$s-->
@@ -133,4 +134,7 @@
   <string name="title_activity_google_facebook_login">GoogleFacebookLogin</string>
   <string name="title_activity_google_facebook">GoogleFacebook</string>
   <string name="title_activity_login_redirect">LoginRedirect</string>
+  <string name="title_activity_face_book_login">FaceBookLogin</string>
+  <string name="title_activity_google">Google</string>
+  <string name="title_activity_payment">Payment</string>
 </resources>

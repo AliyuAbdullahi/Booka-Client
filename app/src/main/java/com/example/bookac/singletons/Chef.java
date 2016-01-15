@@ -11,6 +11,10 @@ import java.util.ArrayList;
  */
 public class Chef implements Serializable{
 
+  public int rating;
+  public boolean visibility;
+  public double distance;
+
   public void setAddress (String address) {
     this.address = address;
   }

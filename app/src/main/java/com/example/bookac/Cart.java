@@ -49,7 +49,7 @@ public class Cart extends AppCompatActivity {
     setSupportActionBar (toolbar);
     com.pkmmte.view.CircularImageView userImage = (com.pkmmte.view.CircularImageView)
             findViewById (R.id.myAvartar);
-    loadImage (Cart.this, userImage, User.imageUrl);
+    loadImage (Cart.this, userImage, User.getContent (Cart.this, "photo", "photo"));
 
     gridView = (GridView)findViewById (R.id.grid_view);
 
@@ -165,8 +165,7 @@ public class Cart extends AppCompatActivity {
       TextView mealprice = (TextView)row.findViewById (R.id.mealprice);
       mealprice.setText ("$" + item.price + "");
       mealTitle.setText (item.name);
-
-      loadImage (Cart.this, mealImage, item.imageUrl.get (0));
+      loadImage (Cart.this, mealImage, item.photo);
       return row;
     }
   }

@@ -17,6 +17,8 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import logger.Log;
+
 /**
  * Created by aliyuolalekan on 20/12/2015.
  */
@@ -32,6 +34,7 @@ public class PaymentController {
       @Override
       public void onResponse (String response) {
         Toast.makeText (context.getApplicationContext (), response, Toast.LENGTH_SHORT).show ();
+        Log.e ("PaymentResponse", response);
       }
     }, new Response.ErrorListener () {
       @Override

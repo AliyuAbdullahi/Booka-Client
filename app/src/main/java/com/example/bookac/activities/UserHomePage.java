@@ -146,14 +146,14 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     autoCompleteTextView = (AutoCompleteTextView)findViewById (R.id.autocomplete_place_text_view);
     searchCard = (CardView)findViewById (R.id.searchcard);
     searchCard.setVisibility (View.INVISIBLE);
-    getUserData ();
+//    getUserData ();
     chefsList = (ListView) findViewById (R.id.listView);
     userImage = (com.pkmmte.view.CircularImageView)
             findViewById (R.id.myAvartar);
 
     //Picassso Library is used to load image into imageview
     PicassoImageLoader loader = new PicassoImageLoader (UserHomePage.this);
-    loader.loadImage (userImage, User.getImageUrl (UserHomePage.this, "Id"));
+    loader.loadImage (userImage, User.getContent (UserHomePage.this, "photo", "photo"));
 
     //get All the chefs around
     noChefFound  = (TextView)findViewById (R.id.not_found);
@@ -229,7 +229,6 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     final StringRequest request = new StringRequest (Request.Method.GET, chefUrl, new Response.Listener<String> () {
       @Override
       public void onResponse (String response) {
-        Log.e (" ", response);
         DecimalFormat decimalFormat = new DecimalFormat ("#");
         decimalFormat.setMaximumFractionDigits (0);
         try {
@@ -237,11 +236,15 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
           for (int i = 0; i < chefArray.length (); i++) {
             JSONObject currentChef = chefArray.getJSONObject (i);
             final Chef chef = new Chef ();
-            chef.address = currentChef.getString ("address");
+            if(currentChef.has ("address"))
+              chef.address = currentChef.getString ("address");
             chef.firstname = currentChef.getString ("first_name");
             chef.lastname = currentChef.getString ("last_name");
-            chef.nickName = currentChef.getString ("username");
             chef.uid = currentChef.getString ("uid");
+            chef.profilePhoto = currentChef.getString ("profile_photo");
+            chef.rating = currentChef.getInt ("rating_overall");
+            chef.visibility = currentChef.getBoolean ("visibility");
+            chef.distance = currentChef.getDouble ("distance");
             //try{
               //chef.phoneNumber = Long.parseLong ((decimalFormat.format (Double.parseDouble (currentChef.getString ("phone_number")))));
 
@@ -253,9 +256,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
               chef.profilePhoto = currentChef.getString ("profile_photo");
             }
             chefs.add (chef);
-            if(chef != null){
-              searchCard.setVisibility (View.VISIBLE);
-            }
+            searchCard.setVisibility (View.VISIBLE);
             if(chef.address == null)
             {
               Toast.makeText (getApplicationContext (), "Please search for another location", Toast.LENGTH_SHORT).show ();
@@ -335,6 +336,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     }, new Response.ErrorListener () {
       @Override
       public void onErrorResponse (VolleyError error) {
+        Toast.makeText (getApplicationContext (),"Something went wrong, retry", Toast.LENGTH_LONG).show ();
         Log.e ("", error.toString ());
       }
     });
@@ -363,7 +365,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
 
   @Override
   public void onMapReady (GoogleMap googleMap) {
-    getUserData ();
+//    getUserData ();
     mapReady = true;
     map = googleMap;
 
@@ -411,58 +413,58 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   //getUserData obtains the current user's data, including location and image url
-  public void getUserData(){
-    RequestQueue queue = Volley.newRequestQueue ( UserHomePage.this);
-    StringRequest request = new StringRequest (Request.Method.POST, "http://mybukka.herokuapp.com/api/v1/bukka/auth/login", new Response.Listener<String> () {
-      @Override
-      public void onResponse (String response) {
-        String userImageUrl = null;
-        try {
-          JSONObject responseObject = new JSONObject (response);
-          Log (response);
-          JSONObject authObject = responseObject.getJSONObject ("auth");
-          String token = authObject.getString ("token");
-          JSONObject imageUrlObject = authObject.getJSONObject ("password");
-          userImageUrl = imageUrlObject.getString ("profileImageURL");
-          User.imageUrl = userImageUrl;
-          JSONObject userObject = responseObject.getJSONObject ("userObj");
-          address = userObject.getString ("address");
-          JSONObject coordnates = userObject.getJSONObject ("coords");
-          User.saveString ("address", address, UserHomePage.this);
-        } catch (JSONException e) {
-          e.printStackTrace ();
-        }
-      }
-    }, new Response.ErrorListener () {
-      @Override
-      public void onErrorResponse (VolleyError error) {
-        Toast.makeText (getApplicationContext (), error+ "", Toast.LENGTH_SHORT).show ();
-        Log.e ("Error:", error+"");
-      }
-    }){
-      @Override
-      protected Map<String, String> getParams () throws AuthFailureError {
-        super.getParams ();
-        Map<String,String> params = new HashMap<String, String> ();
-        params.put ("email", User.getDB (UserHomePage.this, "username", ""));
-        params.put ("password", User.getDB (UserHomePage.this, "password", ""));
-        return params;
-      }
-
-      @Override
-      public Map<String, String> getHeaders () throws AuthFailureError {
-        super.getHeaders ();
-        Map<String,String> params = new HashMap<String, String>();
-        params.put("Content-Type","application/x-www-form-urlencoded");
-        return params;
-      }
-    };
-
-    int socketTimeout = 30000;//30 seconds - change to what you want
-    RetryPolicy policy = new DefaultRetryPolicy (socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-    request.setRetryPolicy(policy);
-    queue.add (request);
-  }
+//  public void getUserData(){
+//    RequestQueue queue = Volley.newRequestQueue ( UserHomePage.this);
+//    StringRequest request = new StringRequest (Request.Method.POST, "http://mybukka.herokuapp.com/api/v1/bukka/auth/login", new Response.Listener<String> () {
+//      @Override
+//      public void onResponse (String response) {
+//        String userImageUrl = null;
+//        try {
+//          JSONObject responseObject = new JSONObject (response);
+//          Log (response);
+//          JSONObject authObject = responseObject.getJSONObject ("auth");
+//          String token = authObject.getString ("token");
+//          JSONObject imageUrlObject = authObject.getJSONObject ("password");
+//          userImageUrl = imageUrlObject.getString ("profileImageURL");
+//          User.imageUrl = userImageUrl;
+//          JSONObject userObject = responseObject.getJSONObject ("userObj");
+//          address = userObject.getString ("address");
+//          JSONObject coordnates = userObject.getJSONObject ("coords");
+//          User.saveString ("address", address, UserHomePage.this);
+//        } catch (JSONException e) {
+//          e.printStackTrace ();
+//        }
+//      }
+//    }, new Response.ErrorListener () {
+//      @Override
+//      public void onErrorResponse (VolleyError error) {
+//        Toast.makeText (getApplicationContext (), error+ "", Toast.LENGTH_SHORT).show ();
+//        Log.e ("Error:", error+"");
+//      }
+//    }){
+//      @Override
+//      protected Map<String, String> getParams () throws AuthFailureError {
+//        super.getParams ();
+//        Map<String,String> params = new HashMap<String, String> ();
+//        params.put ("email", User.getDB (UserHomePage.this, "username", ""));
+//        params.put ("password", User.getDB (UserHomePage.this, "password", ""));
+//        return params;
+//      }
+//
+//      @Override
+//      public Map<String, String> getHeaders () throws AuthFailureError {
+//        super.getHeaders ();
+//        Map<String,String> params = new HashMap<String, String>();
+//        params.put("Content-Type","application/x-www-form-urlencoded");
+//        return params;
+//      }
+//    };
+//
+//    int socketTimeout = 30000;//30 seconds - change to what you want
+//    RetryPolicy policy = new DefaultRetryPolicy (socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+//    request.setRetryPolicy(policy);
+//    queue.add (request);
+//  }
 
   //a method for toasting messages
   public void Toast(String message){
@@ -525,7 +527,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
   protected void onResume () {
     super.onResume ();
     isResume = true;
-    getUserData ();
+//    getUserData ();
     userImage = (com.pkmmte.view.CircularImageView)
             findViewById (R.id.myAvartar);
     PicassoImageLoader loader = new PicassoImageLoader (UserHomePage.this);
@@ -576,7 +578,7 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
       TextView chefname = (TextView)row.findViewById (R.id.chefname);
       TextView chefaddress = (TextView)row.findViewById (R.id.chefaddress);
 //      TextView chefdistance = (TextView)row.findViewById (R.id.chefdistance);
-      String text = chef.nickName;
+      String text = chef.firstname + " " + chef.lastname;
       try{
         chefname.setText (text);
         chefaddress.setText (chef.address);
@@ -634,7 +636,6 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void afterTextChanged(Editable s) {
-
 
     }
   }

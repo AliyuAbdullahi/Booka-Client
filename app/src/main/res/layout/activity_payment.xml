@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+  android:background="@drawable/red"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:fitsSystemWindows="true"
+  tools:context="com.example.bookac.activities.Payment">
+<LinearLayout
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <ImageView
+    android:scaleType="centerCrop"
+    android:src="@drawable/inskapedesert"
+    android:id="@+id/foodImageCheckout"
+    android:layout_width="match_parent"
+    android:layout_height="270dp"/>
+
+  <LinearLayout
+    android:layout_marginBottom="20dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+      <TextView
+        android:textSize="28sp"
+        android:textColor="#fff"
+        android:text="Iya bose"
+        android:id="@+id/foodNameCheckout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+      <TextView
+        android:textSize="30sp"
+        android:layout_alignParentRight="true"
+        android:textColor="#fff"
+        android:layout_gravity="center_horizontal"
+        android:text="Eba ogufe"
+        android:id="@+id/priceCheckOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+  </LinearLayout>
+
+    <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+
+    <LinearLayout
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+      <TextView
+        android:textColor="#fff"
+        android:text="Additional Info"
+        android:layout_weight="3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"/>
+      <EditText
+        android:id="@+id/moreInfo"
+        android:inputType="textMultiLine"
+        android:background="#ccc"
+        android:textColor="#fff"
+        android:layout_weight="7"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"/>
+    </LinearLayout>
+      <Button
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Make Payment"
+        android:id="@+id/makePaymentCheckout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>
+</ScrollView>

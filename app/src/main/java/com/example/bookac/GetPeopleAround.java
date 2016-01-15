@@ -53,6 +53,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bookac.activities.UserHomePage;
+import com.example.bookac.constants.Constants;
 import com.example.bookac.fragments.NavigationFragment;
 import com.example.bookac.singletons.Chef;
 import com.example.bookac.singletons.User;
@@ -160,7 +161,7 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
           Toast.makeText (getApplicationContext (), "Search for a location", Toast.LENGTH_SHORT).show ();
         } else if (visible && isOnline ()) {
           Intent go = new Intent (GetPeopleAround.this, UserHomePage.class);
-          setUpListView upListView = new setUpListView (GetPeopleAround.this, "http://mybukka.herokuapp.com/api/v1/bukka/chefs/"
+          setUpListView upListView = new setUpListView (GetPeopleAround.this, Constants.PEOPLE_AROUND_URL
                   + mMap.getCameraPosition ().target.latitude + "/" + mMap.getCameraPosition ().target.longitude);
           upListView.execute ();
           go.putExtra ("longitude", mMap.getCameraPosition ().target.longitude);
@@ -476,8 +477,7 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
   protected void onResume () {
     super.onResume ();
     PicassoImageLoader loader = new PicassoImageLoader (GetPeopleAround.this);
-    loader.loadImage (userImage, User.imageUrl );
-    Toast.makeText (getApplicationContext (), User.imageUrl, Toast.LENGTH_SHORT).show ();
+    loader.loadImage (userImage, User.getContent (GetPeopleAround.this, "photo", "photo"));
     checkPlayServices ();
   }
 
@@ -485,7 +485,7 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
   public void onActivityReenter (int resultCode, Intent data) {
     super.onActivityReenter (resultCode, data);
     PicassoImageLoader loader = new PicassoImageLoader (GetPeopleAround.this);
-    loader.loadImage (userImage, User.imageUrl);
+    loader.loadImage (userImage, User.getContent (GetPeopleAround.this, "photo", "photo"));
   }
 
   public class setUpListView extends AsyncTask<Void, Void, Void> {
@@ -515,7 +515,7 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
               chef.firstname = currentChef.getString ("first_name");
               chef.lastname = currentChef.getString ("last_name");
               chef.nickName = currentChef.getString ("username");
-              chef.phoneNumber = Long.parseLong ((decimalFormat.format (Double.parseDouble (currentChef.getString ("phone_number")))));
+//              chef.phoneNumber = Long.parseLong ((decimalFormat.format (Double.parseDouble (currentChef.getString ("phone_number")))));
               JSONObject coord = currentChef.getJSONObject ("coords");
               chef.longitude = Double.parseDouble (coord.getString ("lng"));
               chef.latitude = Double.parseDouble (coord.getString ("lat"));

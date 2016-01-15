@@ -89,7 +89,7 @@ public class UserMenu extends AppCompatActivity {
     mdrawerLayout = (DrawerLayout) findViewById (R.id.drawer_layout_menu);
     navigationFragment = (NavigationFragment)getSupportFragmentManager ().findFragmentById (R.id.navigation_fragment);
     navigationFragment.setUp (R.id.navigation_fragment, mdrawerLayout, toolbar);
-    chefTitle.setText (chefNick);
+    chefTitle.setText (chefFirstName + " " + chefLastName);
     CollapsingToolbarLayout collapsingToolbar =
             (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
     String[] addressLocale = chefAddrss.split (",");
@@ -174,11 +174,7 @@ public class UserMenu extends AppCompatActivity {
             item.doneTime = responseObject.getInt ("min");
             item.doneTimeInOur = responseObject.getInt ("hour");
             item.name = responseObject.getString ("menu");
-            JSONArray imageUrls = responseObject.getJSONArray ("images");
-
-              for(int j = 0; j < imageUrls.length (); j++) {
-                item.imageUrl.add ((String) imageUrls.get (0));
-              }
+            item.photo = responseObject.getString ("image");
             chef.menuItems.add (item);
           }
           for(MenuItem itemx: chef.menuItems){
@@ -284,8 +280,13 @@ public class UserMenu extends AppCompatActivity {
         @Override
         public void onClick (View v) {
           double price = item.price;
-          Intent makePayment = new Intent (UserMenu.this, MakePayment.class);
+          String itemName = item.name;
+          String photo = item.photo;
+          Intent makePayment = new Intent (UserMenu.this, Payment.class);
           makePayment.putExtra ("price", price);
+          makePayment.putExtra ("name", itemName);
+          makePayment.putExtra ("photo", photo);
+          makePayment.putExtra ("uid", chefUid);
           startActivity (makePayment);
         }
       });
@@ -304,7 +305,7 @@ public class UserMenu extends AppCompatActivity {
         }
       });
       PicassoImageLoader loader = new PicassoImageLoader (UserMenu.this);
-      loader.loadImage (holder.desertImage, item.imageUrl.get (0));
+      loader.loadImage (holder.desertImage, item.photo);
 
     }
 

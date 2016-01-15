@@ -1,10 +1,12 @@
 package com.example.bookac.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,9 +19,13 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.bookac.GetPeopleAround;
 import com.example.bookac.R;
 import com.example.bookac.constants.Constants;
 import com.example.bookac.singletons.User;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +36,8 @@ public class LoginRedirect extends AppCompatActivity {
   protected void onCreate (Bundle savedInstanceState) {
     super.onCreate (savedInstanceState);
     setContentView (R.layout.activity_login_redirect);
+
+
     Toast.makeText (LoginRedirect.this, "Sleeping", Toast.LENGTH_SHORT).show ();
     try {
       Thread.sleep (5000);
@@ -52,7 +60,19 @@ public class LoginRedirect extends AppCompatActivity {
     StringRequest request = new StringRequest (Request.Method.POST, Constants.LOGIN_URL, new Response.Listener<String> () {
       @Override
       public void onResponse (String response) {
-        Toast.makeText (getApplicationContext (), response, Toast.LENGTH_LONG).show ();
+        Log.e ("Response: ", response + "");
+        try{
+          JSONObject responseObject = new JSONObject (response);
+          JSONObject profile = responseObject.getJSONObject ("profile");
+          User.saveContent ("photo", profile.getString ("photo").replace ("\\",""), LoginRedirect.this, "photo");
+          User.saveContent ("firstname", profile.getString ("firstname"), LoginRedirect.this, "firstname" );
+          User.saveContent ("lastname", profile.getString ("lastname"), LoginRedirect.this, "lastname" );
+          User.saveContent ("token", profile.getString ("token"), LoginRedirect.this, "token" );
+          User.saveContent ("uid", profile.getString ("uid"), LoginRedirect.this, "uid" );
+        }catch (JSONException e){e.printStackTrace ();
+        }
+        Intent gotToGetPeopleAround = new Intent (LoginRedirect.this, GetPeopleAround.class);
+        startActivity (gotToGetPeopleAround);
       }
     }, new Response.ErrorListener () {
       @Override

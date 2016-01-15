@@ -15,4 +15,5 @@ public class MenuItem {
 
   public int doneTime;
   public int doneTimeInOur;
+  public String photo;
 }

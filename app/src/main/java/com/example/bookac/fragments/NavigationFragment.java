@@ -52,11 +52,13 @@ public class NavigationFragment extends Fragment {
 
     userImage = (ImageView)view.findViewById (R.id.sideNavAvatar);
     PicassoImageLoader loader = new PicassoImageLoader (getActivity ());
-    loader.loadImage (userImage, User.getImageUrl (getActivity (), "Id"));
-    usernameOfsideNav = (TextView)view.findViewById (R.id.userfirstnameforsidenav);
-    lastNameOfSideNav = (TextView)view.findViewById (R.id.userlastnameforsidenav);
-    usernameOfsideNav.setText (User.firstName);
-    lastNameOfSideNav.setText (User.lastName);
+    try{
+      loader.loadImage (userImage, User.getContent(getActivity (), "photo", "photo"));
+      usernameOfsideNav = (TextView)view.findViewById (R.id.userfirstnameforsidenav);
+      lastNameOfSideNav = (TextView)view.findViewById (R.id.userlastnameforsidenav);
+      usernameOfsideNav.setText (User.getContent (getActivity (), "firstname", "firstname"));
+      lastNameOfSideNav.setText (User.getContent (getActivity (), "lastname", "lastname"));
+    }catch (NullPointerException e){e.printStackTrace ();}
 
     SideNavListAdapter adapter = new SideNavListAdapter (getContext ());
     listView.setAdapter (adapter);

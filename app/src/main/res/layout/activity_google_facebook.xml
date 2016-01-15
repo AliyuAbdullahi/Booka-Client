@@ -1,17 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
+  android:orientation="vertical"
   android:layout_height="match_parent"
   android:fitsSystemWindows="true"
   tools:context="com.example.bookac.activities.GoogleFacebook">
 
   <Button
+    android:layout_centerInParent="true"
     android:id="@+id/loginGoogle"
-    android:text="Login with Google"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+    android:background="@drawable/google_login_prime"
+    android:layout_width="250dp"
+    android:layout_height="60dp"/>
 
-</LinearLayout>
+  <com.facebook.login.widget.LoginButton
+    android:layout_below="@id/loginGoogle"
+    android:layout_centerInParent="true"
+    android:id="@+id/login_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="40dp"
+    android:layout_marginBottom="30dp" />
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/info"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:textSize="18sp"
+    />
+
+</RelativeLayout>

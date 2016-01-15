@@ -53,7 +53,6 @@ public class Menu extends AppCompatActivity {
 
   Bundle args = new Bundle();
 
-
   DrawerLayout mdrawerLayout;
   NavigationFragment navigationFragment;
   ListView listView;

@@ -177,6 +177,7 @@ public class PaymentDialog extends DialogFragment {
         String secret = "3383d1a753b6aec287f29cac37742f72";
         PaymentController controller = new PaymentController (getActivity ());
         controller.makeRequest ("https://paystack.ng/charge/mobiletoken/", iD, secret, "age@demo.com", 200, token.token);
+
       }
 
       @Override
@@ -204,6 +205,7 @@ public class PaymentDialog extends DialogFragment {
   @Override
   public void onActivityResult (int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
+    Toast.makeText (getActivity (), data.toString (), Toast.LENGTH_LONG).show ();
   }
 
   private boolean isEmpty(String s){
