@@ -55,6 +55,7 @@ public class Payment extends AppCompatActivity {
   EditText moreInfo;
   String moreInfoText;
   String uid;
+  private String chefAddress;
 
   @Override
   protected void onCreate (Bundle savedInstanceState) {
@@ -103,6 +104,7 @@ public class Payment extends AppCompatActivity {
     foodPhotoText = recievedIntent.getStringExtra ("photo");
     moreInfoText = moreInfo.getText ().toString ();
     uid = recievedIntent.getStringExtra ("uid");
+    chefAddress = recievedIntent.getStringExtra ("address");
   }
 
   private void makePayment(){
@@ -112,6 +114,9 @@ public class Payment extends AppCompatActivity {
       @Override
       public void onResponse (String response) {
         Toast.makeText (getApplicationContext (), "Transaction Successful", Toast.LENGTH_LONG).show ();
+//        Intent goBack = new Intent (Payment.this, UserMenu.class);
+//        goBack.putExtra ("address", chefAddress);
+//        startActivity (goBack);
       }
     }, new Response.ErrorListener () {
       @Override

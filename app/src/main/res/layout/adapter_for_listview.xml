@@ -10,16 +10,16 @@
 <LinearLayout
   android:orientation="horizontal"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_height="wrap_content">
 
   <com.pkmmte.view.CircularImageView
     android:layout_gravity="center_vertical"
     android:layout_weight="1"
     android:id="@+id/avatar"
     android:layout_margin="10dp"
-    android:src="@drawable/logo"
-    android:layout_width="70dp"
-    android:layout_height="70dp"/>
+    android:src="@drawable/desert"
+    android:layout_width="80dp"
+    android:layout_height="80dp"/>
 
     <LinearLayout
       android:layout_gravity="center_vertical"
@@ -31,6 +31,7 @@
       android:layout_height="wrap_content">
 
       <TextView
+        android:text="kdkdkdkd"
         android:textSize="14sp"
         android:textStyle="bold"
         android:id="@+id/chefname"
@@ -38,6 +39,7 @@
         android:layout_height="wrap_content"/>
 
       <TextView
+        android:text="kdkdkdkkkdkd"
         android:textSize="10sp"
         android:id="@+id/chefaddress"
         android:layout_width="wrap_content"
@@ -48,14 +50,11 @@
         <!--android:id="@+id/chefdistance"-->
         <!--android:layout_width="100dp"-->
         <!--android:layout_height="wrap_content"/>-->
-      <RatingBar
-        android:id="@+id/rating_for_chef"
-        android:numStars="5"
-        android:stepSize="0.1"
-        android:isIndicator="true"
-        style="?android:attr/ratingBarStyleIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
     </LinearLayout>
+    <ImageView
+      android:layout_gravity="center_vertical"
+      android:src="@drawable/circle_forward_arrow"
+      android:layout_width="50dp"
+      android:layout_height="50dp"/>
 </LinearLayout>
 </android.support.v7.widget.CardView>

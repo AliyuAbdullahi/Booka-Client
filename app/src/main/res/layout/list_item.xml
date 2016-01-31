@@ -19,7 +19,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-
+              android:padding="8dp"
+              android:background="#EDEFF0"
     android:gravity="center_vertical">
     <RelativeLayout
       android:layout_width="match_parent"
@@ -30,29 +31,21 @@
         android:src="@drawable/desert"
         android:layout_width="match_parent"
         android:layout_height="170dp"/>
-      <View
-        android:background="@drawable/view"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+
       <ImageView
-        android:layout_marginTop="14dp"
-        android:layout_marginRight="8dp"
-        android:id="@+id/sharemeal"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/ic_share_white_48dp"
-        android:layout_width="25dp"
-        android:layout_height="25dp"/>
-      <ImageView
+        android:layout_centerInParent="true"
         android:id="@+id/addTocartImage"
         android:layout_marginTop="14dp"
         android:layout_marginRight="16dp"
-        android:layout_toLeftOf="@id/sharemeal"
-        android:src="@drawable/ic_add_shopping_cart_white_48dp"
-        android:layout_width="25dp"
-        android:layout_height="25dp"/>
+        android:src="@drawable/add_to_cart_green"
+        android:layout_width="140dp"
+        android:layout_height="60dp"/>
 
     </RelativeLayout>
   <TextView
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:textColor="#9C312B"
     android:textStyle="bold"
     android:layout_marginLeft="20dp"
     android:text="White Mocha"
@@ -60,69 +53,93 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textAppearance="?attr/textAppearanceListItem"/>
+    <TextView
+      android:layout_marginLeft="20dp"
+      android:text="This is a meal from teh back and now that its availabe"
+      android:id="@+id/foodDesc"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
   <LinearLayout
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="8dp"
     android:layout_gravity="center_horizontal"
     android:padding="5dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <LinearLayout
-      android:orientation="horizontal"
+      android:orientation="vertical"
+      android:layout_weight="1"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content">
+      <ImageView
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:layout_marginLeft="4dp"
+        android:src="@drawable/time_left"
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
+      <TextView
+        android:id="@+id/cookingTime"
+        android:layout_weight="0.5"
+        android:layout_marginLeft="4dp"
+        android:layout_gravity="center_horizontal"
+        android:text="9 minutes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+      android:orientation="vertical"
       android:layout_weight="1"
       android:layout_width="0dp"
       android:layout_height="wrap_content">
     <ImageView
-      android:layout_gravity="center_vertical"
+      android:layout_gravity="center_horizontal"
       android:layout_weight="1"
       android:layout_marginLeft="4dp"
-      android:src="@drawable/cooking"
-      android:layout_width="20dp"
-      android:layout_height="20dp"/>
-    <TextView
-      android:id="@+id/mealTypeX"
-      android:layout_weight="1"
-      android:layout_marginLeft="4dp"
-      android:layout_gravity="center_vertical"
-      android:text="DESERT"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+      android:src="@drawable/bucket"
+      android:layout_width="40dp"
+      android:layout_height="40dp"/>
+      <LinearLayout
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+          android:scaleType="centerCrop"
+          android:src="@drawable/minus"
+          android:layout_width="20dp"
+          android:layout_height="20dp"/>
+        <TextView
+          android:id="@+id/mealTypeX"
+          android:layout_weight="1"
+          android:layout_marginLeft="4dp"
+          android:text="DESERT"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+        <ImageView
+          android:src="@drawable/plus"
+          android:layout_width="20dp"
+          android:layout_height="20dp"/>
       </LinearLayout>
-    <LinearLayout
-      android:orientation="horizontal"
-      android:layout_weight="1"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content">
-    <ImageView
-      android:layout_gravity="center_vertical"
-      android:layout_weight="1"
-      android:layout_marginLeft="4dp"
-      android:src="@drawable/time"
-      android:layout_width="20dp"
-      android:layout_height="20dp"/>
-    <TextView
-      android:id="@+id/cookingTime"
-      android:layout_weight="0.5"
-      android:layout_marginLeft="4dp"
-      android:layout_gravity="center_vertical"
-      android:text="9 minutes"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+
       </LinearLayout>
+
     <LinearLayout
-      android:elevation="4dp"
-      android:background="#ccc"
+
       android:id="@+id/checkout"
-      android:orientation="horizontal"
+      android:orientation="vertical"
       android:layout_weight="1"
       android:layout_width="0dp"
       android:layout_height="wrap_content">
+      <ImageView
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/barrow"
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
       <TextView
         android:id="@+id/price"
-        android:textColor="#9C312B"
-        android:textSize="24sp"
-        android:textStyle="bold"
         android:layout_weight="1"
-        android:layout_marginLeft="15dp"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="center_horizontal"
         android:text="N500"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

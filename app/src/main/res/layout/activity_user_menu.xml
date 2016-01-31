@@ -8,6 +8,7 @@
   android:layout_height="match_parent"
   android:clickable="true"
   android:focusableInTouchMode="true">
+
 <android.support.design.widget.CoordinatorLayout
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -16,7 +17,7 @@
 
   <android.support.design.widget.AppBarLayout
     android:id="@+id/app_bar"
-    android:background="#9C312B"
+    android:background="#86021A"
     android:layout_width="match_parent"
     android:layout_height="@dimen/app_bar_height"
     android:fitsSystemWindows="true"
@@ -38,11 +39,11 @@
         app:border="true"
         app:shadow="true"
         app:border_color="#EEEEEE"
-        app:border_width="2dp"
+        app:border_width="4dp"
         android:layout_gravity="center"
-        android:layout_width="110dp"
+        android:layout_width="90dp"
         android:src="@drawable/food"
-        android:layout_height="110dp"
+        android:layout_height="90dp"
         android:scaleType="fitCenter"
         android:fitsSystemWindows="true"
         app:layout_collapseMode="parallax" />
@@ -51,66 +52,85 @@
         android:gravity="center_vertical"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
+        android:layout_height="65dp">
+        <RelativeLayout
           android:id="@+id/callImage"
-          android:background="@drawable/menu_button"
-          android:paddingTop="8dp"
-          android:paddingBottom="8dp"
-          android:layout_weight="1.48"
+          android:background="#F08218"
+          android:layout_weight="1"
           android:layout_width="0dp"
-          android:layout_height="wrap_content">
+          android:layout_height="match_parent">
           <ImageView
-            android:layout_marginLeft="20dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_call_white_48dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
-        </LinearLayout>
+            android:src="@drawable/call_image"
+            android:layout_centerInParent="true"
+            android:id="@+id/caller"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+          <TextView
+            android:textColor="#fff"
+            android:paddingBottom="5dp"
+            android:layout_centerInParent="true"
+            android:text="CALL"
+            android:layout_below="@id/caller"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+          </RelativeLayout>
         <RelativeLayout
           android:id="@+id/rateImage"
-          android:background="@drawable/menu_button"
-          android:paddingBottom="20dp"
-          android:paddingTop="20dp"
-          android:paddingLeft="1dp"
-          android:layout_weight="0.82"
-          android:layout_width="wrap_content"
+          android:background="#F08218"
+          android:layout_weight="1"
+          android:layout_width="0dp"
           android:layout_height="match_parent">
+          <ImageView
+            android:scaleType="centerCrop"
+            android:src="@drawable/rate_star"
+            android:layout_centerInParent="true"
+            android:id="@+id/rater"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
           <TextView
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
             android:textColor="#fff"
-            android:gravity="center_horizontal"
+            android:paddingBottom="5dp"
+            android:layout_centerInParent="true"
             android:text="RATE"
+            android:layout_below="@id/rater"
+            android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         </RelativeLayout>
         <RelativeLayout
           android:id="@+id/reportImage"
-          android:background="@drawable/menu_button"
+          android:background="#F08218"
           android:layout_weight="1"
-          android:layout_width="wrap_content"
+          android:layout_width="0dp"
           android:layout_height="match_parent">
+          <ImageView
+            android:src="@drawable/report_image"
+            android:layout_centerInParent="true"
+            android:id="@+id/reporter"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
           <TextView
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
+            android:paddingBottom="5dp"
             android:textColor="#fff"
-            android:gravity="center"
+            android:layout_centerInParent="true"
             android:text="REPORT"
+            android:layout_below="@id/reporter"
+            android:textSize="10sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         </RelativeLayout>
       </LinearLayout>
       <TextView
 
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:gravity="center_horizontal"
         android:layout_gravity="bottom"
         android:id="@+id/chefMenuName"
-        android:paddingTop="10dp"
-        android:layout_marginBottom="100dp"
+        android:paddingTop="8dp"
+        android:layout_marginBottom="128dp"
         android:textColor="#fff"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:text="Instanbull turkey"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -119,13 +139,40 @@
         android:layout_gravity="bottom"
         android:id="@+id/chefAddress"
         android:paddingTop="4dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="110dp"
         android:textColor="#fff"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:text="Instanbull turkey"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+      <ImageView
 
+        android:src="@drawable/chef_star"
+        android:layout_marginTop="160dp"
+        android:layout_gravity="center"
+        android:id="@+id/chefswaggerStar"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        android:layout_marginBottom="88dp"
+        android:textColor="#fff"
+        android:textSize="22sp"
+        android:text="Instanbull turkey"
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
+
+      <TextView
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:layout_gravity="bottom"
+        android:id="@+id/rating_value"
+        android:paddingTop="8dp"
+        android:paddingBottom="30dp"
+        android:layout_marginBottom="40dp"
+        android:textColor="#fff"
+        android:textSize="22sp"
+        android:text="4.4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
       <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -142,6 +189,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
   <android.support.v7.widget.RecyclerView
     android:id="@+id/rvToDoList"
+    android:background="#fff"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
   </android.support.v7.widget.RecyclerView>

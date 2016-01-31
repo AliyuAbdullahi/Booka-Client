@@ -51,6 +51,8 @@ public class LoginRedirect extends AppCompatActivity {
     String email = User.getContent (LoginRedirect.this, "email", "email");
     String uid = User.getContent (LoginRedirect.this, "personIdDb", "personId");
     String photo = User.getContent (LoginRedirect.this, "photo", "photo");
+
+    Toast.makeText (LoginRedirect.this, personName, Toast.LENGTH_SHORT).show ();
     makeVolleyRequest (token, personName, email, uid, photo);
   }
 

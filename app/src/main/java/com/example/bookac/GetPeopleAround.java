@@ -91,7 +91,6 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
   private ActionBarDrawerToggle toggle;
   NavigationFragment navigationFragment;
   private RelativeLayout goNow;
-  TextView goToLocation;
   Bitmap image;
   double latitud;
   Bitmap myRoundedImage;
@@ -105,6 +104,7 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
   private GoogleMap mMap;
   android.support.v7.widget.CardView cardView;
   TextView location;
+  private TextView gotoLocation;
   LinearLayout body;
   boolean visible = false;
   private Animation hide;
@@ -131,28 +131,29 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
     toolbar = (Toolbar) findViewById (R.id.toolbarpeople);
     setSupportActionBar (toolbar);
 
-
-
     getSupportActionBar ().setDisplayHomeAsUpEnabled (true);
-    userImage = (CircularImageView)
-            findViewById (R.id.myAvartar);
-    if(savedInstanceState != null){
-      image = (Bitmap) savedInstanceState.getParcelable ("BitmapImage");
-      userImage.setImageBitmap (image);
-    }
-    else {
-      picassoImageLoader.loadImage (userImage, User.getImageUrl (GetPeopleAround.this, "Id"));
-    }
+//    userImage = (CircularImageView)
+//            findViewById (R.id.myAvartar);
+//    if(savedInstanceState != null){
+//      image = (Bitmap) savedInstanceState.getParcelable ("BitmapImage");
+//      userImage.setImageBitmap (image);
+//    }
+//    else {
+//      picassoImageLoader.loadImage (userImage, User.getImageUrl (GetPeopleAround.this, "Id"));
+//    }
 
-    userImage.setDrawingCacheEnabled (true);
-    myRoundedImage = userImage.getDrawingCache();
+//    userImage.setDrawingCacheEnabled (true);
+//    myRoundedImage = userImage.getDrawingCache();
 
     navigationFragment.setUp (R.id.navigation_fragment, mdrawerLayout, toolbar);
     final ImageView clearText = (ImageView) findViewById (R.id.cancelImage);
+    gotoLocation = (TextView)findViewById (R.id.go_to_location);
+    if(visible)
+      gotoLocation.setText ("Tap map to enter location");
     location = (TextView) findViewById (R.id.location);
     body = (LinearLayout) findViewById (R.id.body);
     enterLocation = (ImageView) findViewById (R.id.enter_one);
-    goToLocation = (TextView) findViewById (R.id.go_to_location);
+    enterLocation.setImageResource (R.drawable.old_goto);
     goNow = (RelativeLayout) findViewById (R.id.go_now);
     enterLocation.setOnClickListener (new View.OnClickListener () {
       @Override
@@ -187,6 +188,8 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
         return true;
       }
     });
+
+
     cardView = (CardView) findViewById (R.id.cardview);
     cardView.setVisibility (View.GONE);
     clearText.setOnClickListener (new View.OnClickListener () {
@@ -228,7 +231,6 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
     return true;
   }
 
-
   public int getStatusBarHeight() {
     int result = 0;
     int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -237,7 +239,6 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
     }
     return result;
   }
-
 
   @Override
   protected void onActivityResult (int requestCode, int resultCode, Intent data) {
@@ -302,16 +303,14 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
         if (!visible) {
           cardView.setVisibility (View.VISIBLE);
           cardView.startAnimation (show);
-          enterLocation.setImageResource (R.drawable.getcheflocationactive);
-          goToLocation.setText ("Find Chefs in " + location.getText ().toString ());
+          enterLocation.setImageResource (R.drawable.new_go_to);
           CameraPosition newPosition = CameraPosition.builder ().target (latLng)
                   .zoom (15).build ();
           visible = true;
         } else {
+          enterLocation.setImageResource (R.drawable.old_goto);
           cardView.startAnimation (hide);
           cardView.setVisibility (View.GONE);
-          goToLocation.setText (" --- ---");
-          enterLocation.setImageResource (R.drawable.gotocheflocation);
           CameraPosition newPosition = CameraPosition.builder ().target (latLng)
                   .zoom (15).build ();
           visible = false;
@@ -416,12 +415,14 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
             location.setText (addresses.get (0).getFeatureName () + ", " +
                     addresses.get (0).getAdminArea ()
                     + ", " + addresses.get (0).getCountryName ());
-            if (visible && isOnline () && !(location.getText ().toString ().equalsIgnoreCase (WAITING_FOR_LOCATION))) {
-              goToLocation.setText ("Find Chefs in " + addresses.get (0).getFeatureName () + ", " + addresses.get (0).getAdminArea ());
-              enterLocation.setImageResource (R.drawable.getcheflocationactive);
-            } else {
-              goToLocation.setText ("Tap map to activate");
-              enterLocation.setImageResource (R.drawable.gotocheflocation);
+            if(!visible){
+              enterLocation.setImageResource (R.drawable.old_goto);
+              gotoLocation.setText (addresses.get (0).getFeatureName () + ", " + addresses.get (0).getAdminArea ());
+              }
+            else {
+              enterLocation.setImageResource (R.drawable.new_go_to);
+              gotoLocation.setText ("Find chefs in " + addresses.get (0).getFeatureName () + ", " + addresses.get (0).getAdminArea ());
+
             }
           }
         }
@@ -477,7 +478,7 @@ public class GetPeopleAround extends AppCompatActivity implements OnMapReadyCall
   protected void onResume () {
     super.onResume ();
     PicassoImageLoader loader = new PicassoImageLoader (GetPeopleAround.this);
-    loader.loadImage (userImage, User.getContent (GetPeopleAround.this, "photo", "photo"));
+//    loader.loadImage (userImage, User.getContent (GetPeopleAround.this, "photo", "photo"));
     checkPlayServices ();
   }
 

@@ -3,7 +3,7 @@
     <bool name="transparent_nav">true</bool>
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">#0097A7</item>
-        <item name="colorPrimaryDark">#60009688</item>
+        <item name="colorPrimaryDark">#86021a</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="colorAccent">#eeff00</item>
         <item name="android:divider">#B6B6B6</item>

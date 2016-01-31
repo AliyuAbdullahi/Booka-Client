@@ -7,7 +7,7 @@
   <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-  <include layout="@layout/toolbar"
+  <include layout="@layout/toobar_two_generic"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:id="@+id/toolbarpeople"/>
@@ -73,7 +73,7 @@
     android:layout_centerInParent="true">
     <ImageView
       android:id="@+id/enter_one"
-      android:src="@drawable/gotocheflocation"
+      android:src="@drawable/new_go_to"
       android:layout_width="240dp"
       android:layout_height="80dp"
       android:contentDescription="myprogress"
@@ -81,31 +81,19 @@
       android:layout_alignParentLeft="true"
       android:layout_alignParentStart="true"/>
     <TextView
+      android:layout_marginBottom="5dp"
       android:singleLine="true"
       android:id="@+id/go_to_location"
       android:textStyle="bold"
       android:textColor="#fff"
-      android:layout_centerHorizontal="true"
-      android:layout_marginLeft="20dp"
-      android:layout_marginTop="32dp"
       android:textSize="12sp"
-      android:layout_marginRight="2dp"
       android:scrollHorizontally="true"
       android:text="Tap map to activate"
       android:layout_width="150dp"
-      android:layout_height="wrap_content"/>
-
-    <ImageView
-      android:paddingTop="10dp"
-      android:paddingBottom="16dp"
-      android:paddingLeft="20dp"
-      android:src="@drawable/pin"
-      android:id="@+id/imageCenteInMap"
-      android:layout_width="50dp"
-      android:layout_height="50dp"
-      android:layout_gravity="center"
-      android:layout_below="@+id/go_to_location"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
       android:layout_centerHorizontal="true"/>
+
   </RelativeLayout>
   </RelativeLayout>
   <fragment

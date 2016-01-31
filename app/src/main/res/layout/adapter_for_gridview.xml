@@ -1,29 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:paddingLeft="2dp"
-  android:paddingRight="2dp"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
-  <LinearLayout
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="180dp"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  android:padding="8dp"
+  android:background="#EDEFF0"
+  android:gravity="center_vertical">
+  <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <ImageView
-      android:src="@drawable/inskapedesert"
-      android:padding="2dp"
-      android:id="@+id/imagegrid"
-      android:layout_width="80dp"
-      android:layout_height="80dp"/>
-    <TextView
-      android:textColor="#BF360C"
-      android:id="@+id/titleofmeal"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
-    <TextView
-      android:textColor="#BF360C"
-      android:id="@+id/mealprice"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+      android:id="@+id/desertCartMM"
+      android:scaleType="centerCrop"
+      android:src="@drawable/desert"
+      android:layout_width="match_parent"
+      android:layout_height="100dp"/>
+
+    <ImageView
+      android:layout_centerInParent="true"
+      android:id="@+id/removeFromCartXC"
+      android:layout_marginTop="14dp"
+      android:layout_marginRight="16dp"
+      android:src="@drawable/remove_from_cart_red"
+      android:layout_width="100dp"
+      android:layout_height="40dp"/>
+
+  </RelativeLayout>
+  <TextView
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:textColor="#9C312B"
+    android:textStyle="bold"
+    android:layout_marginLeft="20dp"
+    android:text="White Mocha"
+    android:id="@+id/nameOfMealCartX"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textAppearance="?attr/textAppearanceListItem"/>
+  <TextView
+    android:layout_marginLeft="20dp"
+    android:text="This is a meal from teh back and now that its availabe"
+    android:id="@+id/descriptionCart"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+  <LinearLayout
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_gravity="center_horizontal"
+    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+      android:orientation="vertical"
+      android:layout_weight="1"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content">
+      <ImageView
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:layout_marginLeft="4dp"
+        android:src="@drawable/time_left"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
+      <TextView
+        android:textSize="8sp"
+
+        android:id="@+id/cookingTimeCartXVB"
+        android:layout_weight="0.5"
+        android:layout_marginLeft="4dp"
+        android:layout_gravity="center_horizontal"
+        android:text="9 mins"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+      android:orientation="vertical"
+      android:layout_weight="1"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content">
+      <ImageView
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:layout_marginLeft="4dp"
+        android:src="@drawable/bucket"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
+      <LinearLayout
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+          android:textSize="8sp"
+          android:id="@+id/mealTypeXCartM"
+          android:layout_weight="1"
+          android:layout_marginLeft="2dp"
+          android:text="DESERT"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+      android:id="@+id/checkoutCart"
+      android:orientation="vertical"
+      android:layout_weight="1"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content">
+      <ImageView
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/barrow"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
+      <TextView
+        android:textSize="8sp"
+
+        android:id="@+id/priceCartMM"
+        android:layout_weight="1"
+        android:layout_gravity="center_horizontal"
+        android:text="N500"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    </LinearLayout>
+
   </LinearLayout>
-</android.support.v7.widget.CardView>
+
+</LinearLayout>

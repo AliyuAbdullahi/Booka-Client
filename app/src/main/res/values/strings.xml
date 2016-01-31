@@ -137,4 +137,6 @@
   <string name="title_activity_face_book_login">FaceBookLogin</string>
   <string name="title_activity_google">Google</string>
   <string name="title_activity_payment">Payment</string>
+  <string name="title_activity_splash_screen">SplashScreen</string>
+  <string name="title_activity_user_form_update">UserFormUpdate</string>
 </resources>

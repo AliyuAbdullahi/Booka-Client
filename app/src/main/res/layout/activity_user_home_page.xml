@@ -3,13 +3,13 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-                                        android:id="@+id/drawerLayoutuserhomepage"
+  android:id="@+id/drawerLayoutuserhomepage"
   xmlns:map="http://schemas.android.com/apk/res-auto"
   tools:context="com.example.bookac.activities.UserHomePage">
   <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/toolbar"
+    <include layout="@layout/toolbar_generic"
      android:layout_width="match_parent"
      android:layout_height="wrap_content"
      android:id="@+id/toolbar"/>
@@ -65,39 +65,25 @@
     <RelativeLayout
       android:id="@+id/containerforFrame"
       android:layout_below="@id/frameForMap"
-      android:paddingTop="10dp"
-      android:paddingBottom="10dp"
-      android:background="#A4443B"
+      android:paddingTop="2dp"
+      android:paddingBottom="2dp"
+      android:background="#86021a"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
-      <ImageView
-        android:layout_marginLeft="16dp"
-        android:id="@+id/chef"
-        android:src="@drawable/chef"
-        android:layout_width="50dp"
-        android:layout_height="50dp"/>
+
       <LinearLayout
         android:layout_centerVertical="true"
         android:orientation="vertical"
-        android:layout_toRightOf="@id/chef"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
           android:textColor="#fff"
-          android:id="@+id/chefTitle"
+          android:id="@+id/address_user_home"
           android:layout_marginLeft="8dp"
           android:text="Chefs"
-          android:layout_toRightOf="@id/chef"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>
-        <TextView
-          android:textColor="#fff"
-          android:layout_toRightOf="@id/chef"
-          android:layout_marginLeft="8dp"
-          android:layout_below="@id/chefTitle"
-          android:text="(Near by)"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"/>
+
       </LinearLayout>
       <ImageView
         android:id="@+id/pullMap"

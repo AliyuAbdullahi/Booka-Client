@@ -5,26 +5,37 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:orientation="vertical"
+  android:background="#fff"
   android:layout_height="match_parent"
   android:fitsSystemWindows="true"
   tools:context="com.example.bookac.activities.GoogleFacebook">
 
-  <Button
-    android:layout_centerInParent="true"
-    android:id="@+id/loginGoogle"
-    android:background="@drawable/google_login_prime"
-    android:layout_width="250dp"
-    android:layout_height="60dp"/>
 
-  <com.facebook.login.widget.LoginButton
-    android:layout_below="@id/loginGoogle"
+  <View
     android:layout_centerInParent="true"
-    android:id="@+id/login_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginTop="40dp"
-    android:layout_marginBottom="30dp" />
+    android:background="@drawable/round_edge_rect"
+    android:layout_width="300dp"
+    android:layout_height="300dp"
+    android:id="@+id/imageView2"/>
+
+  <Button
+    android:layout_marginTop="20dp"
+    android:id="@+id/loginGoogle"
+    android:background="@drawable/sign_up_with_google_red"
+    android:layout_width="180dp"
+    android:layout_height="60dp"
+    android:layout_below="@+id/imageView3"
+    android:layout_centerHorizontal="true"/>
+  <Button
+    android:background="@drawable/sign_up_with_facebook_blue"
+    android:layout_marginTop="20dp"
+    android:id="@+id/signUpWithFacebook"
+    android:layout_width="180dp"
+    android:layout_height="60dp"
+    android:layout_below="@+id/loginGoogle"
+    android:layout_alignLeft="@+id/loginGoogle"
+    android:layout_alignStart="@+id/loginGoogle"/>
+
   <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -33,5 +44,13 @@
     android:layout_alignParentTop="true"
     android:textSize="18sp"
     />
+  <ImageView
+    android:src="@drawable/bukka_icon_login"
+    android:layout_width="150dp"
+    android:layout_height="150dp"
+    android:layout_marginTop="43dp"
+    android:id="@+id/imageView3"
+    android:layout_below="@+id/info"
+    android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

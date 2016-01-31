@@ -3,12 +3,17 @@ package com.example.bookac;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +21,20 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.bookac.activities.Payment;
 import com.example.bookac.activities.UserHomePage;
+import com.example.bookac.activities.UserMenu;
+import com.example.bookac.fragments.NavigationFragment;
 import com.example.bookac.singletons.Chef;
 import com.example.bookac.singletons.ItemCart;
 import com.example.bookac.singletons.MenuItem;
 import com.example.bookac.singletons.User;
 import com.example.bookac.singletons.UserCart;
+import com.example.bookac.tools.PicassoImageLoader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -32,11 +42,28 @@ public class Cart extends AppCompatActivity {
   UserCart cart;
   private TextView noItemAvailble;
   GridView gridView;
+  Toolbar toolbar;
+  NavigationFragment navigationFragment;
+  DrawerLayout mdrawerLayout;
+
   @Override
   protected void onCreate (Bundle savedInstanceState) {
     super.onCreate (savedInstanceState);
     setContentView (R.layout.activity_cart);
+
+    toolbar = (Toolbar) findViewById (R.id.toolbar_cart);
+    toolbar.setTitle ("");
+    mdrawerLayout = (DrawerLayout)findViewById (R.id.drawer_layout_cart);
+    setSupportActionBar (toolbar);
+
+    navigationFragment = (NavigationFragment)getSupportFragmentManager ().findFragmentById (R.id.navigation_fragment_cart);
+
+    navigationFragment.setUp (R.id.navigation_fragment, mdrawerLayout, toolbar);
+    gridView = (GridView)findViewById (R.id.grid_view);
     noItemAvailble = (TextView)findViewById (R.id.noItemAvailable);
+    final MyOwnAdapter adapter = new MyOwnAdapter (Cart.this);
+    gridView.setNumColumns (2);
+    gridView.setAdapter (adapter);
 
     if(ItemCart.INSTANCE.itemIsinCart){
       noItemAvailble.setVisibility (View.INVISIBLE);
@@ -45,49 +72,14 @@ public class Cart extends AppCompatActivity {
       noItemAvailble.setVisibility (View.VISIBLE);
     }
 
-    Toolbar toolbar = (Toolbar) findViewById (R.id.toolbarcart);
-    setSupportActionBar (toolbar);
     com.pkmmte.view.CircularImageView userImage = (com.pkmmte.view.CircularImageView)
             findViewById (R.id.myAvartar);
     loadImage (Cart.this, userImage, User.getContent (Cart.this, "photo", "photo"));
 
-    gridView = (GridView)findViewById (R.id.grid_view);
-
-    final myGridAdapter adapter = new myGridAdapter (getApplicationContext ());
-
-    gridView.setAdapter (adapter);
-    gridView.setOnItemLongClickListener (new AdapterView.OnItemLongClickListener () {
-      @Override
-      public boolean onItemLongClick (AdapterView<?> parent, View view, final int position, long id) {
-        AlertDialog.Builder builder = new AlertDialog.Builder (Cart.this);
-        builder.setTitle ("Delete " + ItemCart.INSTANCE.getItems (position).name + " ?");
-        builder.setPositiveButton ("Yes", new DialogInterface.OnClickListener () {
-          @Override
-          public void onClick (DialogInterface dialog, int which) {
-            String content = ItemCart.INSTANCE.getItems (position).name;
-            ItemCart.INSTANCE.delete (position);
-            Toast.makeText (Cart.this, content + " deleted", Toast.LENGTH_SHORT).show ();
-            adapter.notifyDataSetChanged ();
-            if (ItemCart.INSTANCE.getAllItems ().size () <= 0){
-              ItemCart.INSTANCE.itemIsinCart = false;
-              noItemAvailble.setVisibility (View.VISIBLE);
-            }
-          }
-        });
-        builder.setNegativeButton ("No", new DialogInterface.OnClickListener () {
-          @Override
-          public void onClick (DialogInterface dialog, int which) {
-            dialog.dismiss ();
-          }
-        });
-        builder.show ();
-        return true;
-      }
-    });
     /**
      * The floating action button is used for deleting all items
      */
-    FloatingActionButton fab = (FloatingActionButton) findViewById (R.id.fab);
+    final FloatingActionButton fab = (FloatingActionButton) findViewById (R.id.fab);
     fab.setOnClickListener (new View.OnClickListener () {
       @Override
       public void onClick (View view) {
@@ -128,48 +120,6 @@ public class Cart extends AppCompatActivity {
     });
   }
 
-  public class myGridAdapter extends BaseAdapter{
-
-    Context context;
-    public myGridAdapter(Context context){
-      this.context = context;
-
-    }
-    @Override
-    public int getCount () {
-      return ItemCart.INSTANCE.getSize ();
-    }
-
-    @Override
-    public Object getItem (int position) {
-      return ItemCart.INSTANCE.getAllItems ().get (position);
-    }
-
-    @Override
-    public long getItemId (int position) {
-      return position;
-    }
-
-    public View getView (int position, View convertView, ViewGroup parent) {
-      View row = null;
-      MenuItem item = ItemCart.INSTANCE.getAllItems ().get (position);
-
-      if (convertView == null) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-        row = inflater.inflate(R.layout.adapter_for_gridview, parent, false);
-      } else {
-        row = convertView;
-      }
-      ImageView mealImage= (ImageView)row.findViewById (R.id.imagegrid);
-      TextView mealTitle  = (TextView)row.findViewById (R.id.titleofmeal);
-      TextView mealprice = (TextView)row.findViewById (R.id.mealprice);
-      mealprice.setText ("$" + item.price + "");
-      mealTitle.setText (item.name);
-      loadImage (Cart.this, mealImage, item.photo);
-      return row;
-    }
-  }
-
   public void loadImage(final Context context, final ImageView view, final String url){
 
     try {
@@ -187,6 +137,58 @@ public class Cart extends AppCompatActivity {
               });
     } catch (Exception e) {
       e.printStackTrace ();
+    }
+  }
+
+  private class MyOwnAdapter extends BaseAdapter{
+    Context context;
+
+    public MyOwnAdapter(Context context){
+      this.context = context;
+    }
+    @Override
+    public int getCount () {
+      return ItemCart.INSTANCE.getSize ();
+    }
+
+    @Override
+    public Object getItem (int position) {
+      return ItemCart.INSTANCE.getAllItems ().get (position);
+    }
+
+    @Override
+    public long getItemId (int position) {
+      return position;
+    }
+
+    @Override
+    public View getView (int position, View convertView, ViewGroup parent) {
+      final MenuItem menuItem = ItemCart.INSTANCE.getItems (position);
+      View row = null;
+      if (convertView == null) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        row = inflater.inflate(R.layout.adapter_for_gridview, parent, false);
+      } else {
+        row = convertView;
+      }
+      LinearLayout checkout = (LinearLayout)row.findViewById (R.id.checkoutCart);
+      String mBoundString;
+      ImageView removeFromCart = (ImageView)row.findViewById (R.id.removeFromCartXC);
+      TextView nameOfMeal = (TextView)row.findViewById (R.id.nameOfMealCartX);
+      TextView price = (TextView)row.findViewById (R.id.priceCartMM);
+      TextView cookingTime = (TextView)row.findViewById (R.id.cookingTimeCartXVB);
+      TextView mealType = (TextView)row.findViewById (R.id.mealTypeXCartM);
+      ImageView desertImage = (ImageView)row.findViewById (R.id.desertCartMM);
+      TextView description = (TextView)row.findViewById (R.id.descriptionCart);
+      nameOfMeal.setText (menuItem.name);
+      price.setText ("N" + menuItem.price);
+      try {
+        cookingTime.setText (menuItem.doneTime + "mins");
+      }catch (Exception e){e.printStackTrace ();}
+      description.setText (menuItem.description);
+      PicassoImageLoader loader = new PicassoImageLoader (Cart.this);
+      loader.loadImage (desertImage, menuItem.photo);
+      return row;
     }
   }
 }

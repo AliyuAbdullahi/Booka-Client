@@ -52,7 +52,7 @@ import java.util.Objects;
 import logger.Log;
 
 public class UserMenu extends AppCompatActivity {
-  public LinearLayout callImage;
+  public RelativeLayout callImage;
   public RelativeLayout rateImage;
   public RelativeLayout reportImage;
   public TextView chefAddress;
@@ -97,8 +97,11 @@ public class UserMenu extends AppCompatActivity {
     String addressName = chefAddrss.split (",")[addressLocale.length-2];
     String myAddress = addressLocale[addressLocale.length-1];
 
-    try { chefAddress.setText (addressName + ", " + myAddress); } catch (NullPointerException e){e.printStackTrace ();}
-
+    try {
+      chefAddress.setText (addressName + ", " + myAddress);
+    } catch (NullPointerException e){
+      e.printStackTrace ();
+    }
 
     getSupportActionBar ().setDisplayHomeAsUpEnabled (true);
     RecyclerView rv = (RecyclerView)findViewById (R.id.rvToDoList);
@@ -151,8 +154,8 @@ public class UserMenu extends AppCompatActivity {
   }
 
   public void getChefMenu(String url){
-  }
 
+  }
 
   private void setupRecyclerView(final RecyclerView recyclerView, String url) {
 
@@ -162,6 +165,7 @@ public class UserMenu extends AppCompatActivity {
       public void onResponse (String response) {
         android.util.Log.e ("response: ", response);
         try {
+
           Chef chef = new Chef ();
 
           JSONArray responseArray = new JSONArray (response);
@@ -176,9 +180,6 @@ public class UserMenu extends AppCompatActivity {
             item.name = responseObject.getString ("menu");
             item.photo = responseObject.getString ("image");
             chef.menuItems.add (item);
-          }
-          for(MenuItem itemx: chef.menuItems){
-            Toast.makeText (getApplicationContext (), itemx.name, Toast.LENGTH_SHORT).show ();
           }
 
           recyclerView.setLayoutManager (new LinearLayoutManager (recyclerView.getContext ()));
@@ -198,6 +199,7 @@ public class UserMenu extends AppCompatActivity {
 
       }
     });
+
     int socketTimeout = 30000;//30 seconds - change to what you want
     RetryPolicy policy = new DefaultRetryPolicy (socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
     request.setRetryPolicy (policy);
@@ -220,7 +222,7 @@ public class UserMenu extends AppCompatActivity {
       public TextView mealType;
       public final View mView;
       public ImageView desertImage;
-      public ImageView share;
+
       public ImageView addTocart;
 
       public TextView chefTitle;
@@ -234,7 +236,6 @@ public class UserMenu extends AppCompatActivity {
         price = (TextView)view.findViewById (R.id.price);
         desertImage = (ImageView)view.findViewById (R.id.desert);
         addTocart = (ImageView)view.findViewById (R.id.addTocartImage);
-        share = (ImageView)view.findViewById (R.id.sharemeal);
         checkout = (LinearLayout)view.findViewById (R.id.checkout);
 
       }
@@ -267,14 +268,8 @@ public class UserMenu extends AppCompatActivity {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
       final MenuItem item = chef.menuItems.get (position);
       holder.price.setText ("N" + item.price);
-      holder.cookingTime.setText (item.doneTime+"");
+      holder.cookingTime.setText (item.doneTime+" mins");
       holder.nameOfMeal.setText (item.name);
-      holder.share.setOnClickListener (new View.OnClickListener () {
-        @Override
-        public void onClick (View v) {
-          shareIt ("Hello Yet", "how are you");
-        }
-      });
 
       holder.checkout.setOnClickListener (new View.OnClickListener () {
         @Override
@@ -287,6 +282,7 @@ public class UserMenu extends AppCompatActivity {
           makePayment.putExtra ("name", itemName);
           makePayment.putExtra ("photo", photo);
           makePayment.putExtra ("uid", chefUid);
+          makePayment.putExtra ("address", chefAddrss);
           startActivity (makePayment);
         }
       });
@@ -346,7 +342,7 @@ public class UserMenu extends AppCompatActivity {
   private void setUpView(){
     chefAvatar = (com.pkmmte.view.CircularImageView)findViewById (R.id.chefAvatarY);
     mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById (R.id.swipeRefreshLayout);
-    callImage = (LinearLayout)findViewById (R.id.callImage);
+    callImage = (RelativeLayout)findViewById (R.id.callImage);
     rateImage = (RelativeLayout)findViewById (R.id.rateImage);
     reportImage = (RelativeLayout)findViewById (R.id.reportImage);
     chefAddress = (TextView)findViewById (R.id.chefAddress);

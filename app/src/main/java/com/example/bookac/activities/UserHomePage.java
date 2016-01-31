@@ -148,12 +148,12 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     searchCard.setVisibility (View.INVISIBLE);
 //    getUserData ();
     chefsList = (ListView) findViewById (R.id.listView);
-    userImage = (com.pkmmte.view.CircularImageView)
-            findViewById (R.id.myAvartar);
+//    userImage = (com.pkmmte.view.CircularImageView)
+//            findViewById (R.id.myAvartar);
 
     //Picassso Library is used to load image into imageview
     PicassoImageLoader loader = new PicassoImageLoader (UserHomePage.this);
-    loader.loadImage (userImage, User.getContent (UserHomePage.this, "photo", "photo"));
+//    loader.loadImage (userImage, User.getContent (UserHomePage.this, "photo", "photo"));
 
     //get All the chefs around
     noChefFound  = (TextView)findViewById (R.id.not_found);
@@ -528,10 +528,10 @@ public class UserHomePage extends AppCompatActivity implements OnMapReadyCallbac
     super.onResume ();
     isResume = true;
 //    getUserData ();
-    userImage = (com.pkmmte.view.CircularImageView)
-            findViewById (R.id.myAvartar);
+//    userImage = (com.pkmmte.view.CircularImageView)
+//            findViewById (R.id.myAvartar);
     PicassoImageLoader loader = new PicassoImageLoader (UserHomePage.this);
-    loader.loadImage (userImage, User.getImageUrl (UserHomePage.this, "Id"));
+//    loader.loadImage (userImage, User.getImageUrl (UserHomePage.this, "Id"));
     CameraPosition position = CameraPosition.fromLatLngZoom (new LatLng (6,4),15);
   }
 
